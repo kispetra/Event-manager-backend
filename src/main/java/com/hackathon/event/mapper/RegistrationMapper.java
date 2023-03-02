@@ -1,6 +1,5 @@
 package com.hackathon.event.mapper;
 
-import com.hackathon.event.dto.ExperienceRequestDto;
 import com.hackathon.event.dto.RegistrationRequestDto;
 import com.hackathon.event.model.*;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class RegistrationMapper {
     public Registration toEntity(RegistrationRequestDto requestDto){
         Registration registration = new Registration();
-        registration.setPreferredOs(requestDto.getPreferredOs());
+        registration.setPreferredOs(requestDto.getPreferredOS());
         registration.setMotivation(requestDto.getMotivation());
 
         Experience experience = new Experience();
@@ -23,8 +22,8 @@ public class RegistrationMapper {
         Personal personal = new Personal();
 
         Name name = new Name();
-        name.setFirstName(requestDto.getPersonal().getName().getFirstName());
-        name.setLastName(requestDto.getPersonal().getName().getLastName());
+        name.setFirstName(requestDto.getPersonal().getName().getFirst());
+        name.setLastName(requestDto.getPersonal().getName().getLast());
 
         personal.setName(name);
         personal.setEmail(requestDto.getPersonal().getEmail());

@@ -2,11 +2,10 @@ package com.hackathon.event.service.impl;
 
 import com.hackathon.event.dto.RegistrationRequestDto;
 import com.hackathon.event.mapper.RegistrationMapper;
-import com.hackathon.event.model.Registration;
+import com.hackathon.event.model.*;
 import com.hackathon.event.repository.*;
 import com.hackathon.event.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,23 +13,31 @@ import org.springframework.stereotype.Service;
 public class RegistrationServiceImpl implements RegistrationService {
 
     private final RegistrationRepository registrationRepository;
-    private final PersonalRepository personalRepository;
-    private final ExperienceRepository experienceRepository;
     private final RegistrationMapper registrationMapper;
-    private final NameRepository nameRepository;
-    private final EducationRepository educationRepository;
+
 
     @Override
     public void save(Long eventId, RegistrationRequestDto registrationRequestDto) {
         Registration registration = registrationMapper.toEntity(registrationRequestDto);
 
-        nameRepository.save(registration.getPersonal().getName());
-        educationRepository.save(registration.getPersonal().getEducation());
-        personalRepository.save(registration.getPersonal());
+        Name name = registration.getPersonal().getName();
+        name.setPersonal(registration.getPersonal());
+        registration.getPersonal().setName(name);
 
-        experienceRepository.save(registration.getExperience());
+        Education education = registration.getPersonal().getEducation();
+        education.setPersonal(registration.getPersonal());
+        registration.getPersonal().setEducation(education);
+
+        Personal personal = registration.getPersonal();
+        personal.setRegistration(registration);
+        registration.setPersonal(personal);
+
+        Experience experience = registration.getExperience();
+        experience.setRegistration(registration);
+        registration.setExperience(experience);
 
         registrationRepository.save(registration);
-//        return ResponseEntity<>
+
+        //TODO: return response entity
     }
 }

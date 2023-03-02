@@ -17,7 +17,7 @@ public class Experience {
     @SequenceGenerator(name="experience_sequence", allocationSize = 1)
     private Long experienceId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="registration_id")
     @JsonIgnore
     private Registration registration;

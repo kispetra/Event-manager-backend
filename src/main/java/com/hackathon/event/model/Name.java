@@ -16,7 +16,7 @@ public class Name {
     @SequenceGenerator(name="name_sequence", allocationSize = 1)
     private Long nameId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="personal_id")
     @JsonIgnore
     private Personal personal;

@@ -16,10 +16,10 @@ public class Registration {
     @Column(name="registration_id")
     private Long registrationId;
 
-    @OneToOne(mappedBy = "registration")
+    @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Personal personal;
 
-    @OneToOne(mappedBy = "registration")
+    @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Experience experience;
 
     @Column
