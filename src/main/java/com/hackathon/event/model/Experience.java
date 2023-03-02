@@ -19,15 +19,16 @@ public class Experience {
     private Long experienceId;
 
     @OneToOne
-    @JoinColumn(name="registrationid")
+    @JoinColumn(name="registration_id")
     @JsonIgnore
     private Registration registration;
 
+    @Column
     private Integer years;
     @OneToMany(mappedBy = "experience")
     private List<Skill> skills;
     @Column(name="repositoryurl")
     private String repositoryUrl;
-
+    @Column
     private String summary;
 }

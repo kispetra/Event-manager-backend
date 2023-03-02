@@ -17,7 +17,7 @@ public class Name {
     private Long nameId;
 
     @OneToOne
-    @JoinColumn(name="personalid")
+    @JoinColumn(name="personal_id")
     @JsonIgnore
     private Personal personal;
 

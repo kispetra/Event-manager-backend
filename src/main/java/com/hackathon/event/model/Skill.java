@@ -18,9 +18,10 @@ public class Skill {
     private Long skillId;
 
     @ManyToOne
-    @JoinColumn(name="experienceid")
+    @JoinColumn(name="experience_id")
     @JsonIgnore
     private Experience experience;
 
+    @Column
     private Skills skill;
 }

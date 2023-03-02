@@ -17,10 +17,12 @@ public class Education {
     private Long educationId;
 
     @OneToOne
-    @JoinColumn(name="personalid")
+    @JoinColumn(name="personal_id")
     @JsonIgnore
     private Personal personal;
 
+    @Column
     private String faculty;
+    @Column
     private Integer year;
 }

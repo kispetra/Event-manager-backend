@@ -13,18 +13,15 @@ public class Registration {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "registration_sequence")
     @SequenceGenerator(name="registration_sequence", allocationSize = 1)
+    @Column(name="registration_id")
     private Long registrationId;
-
     @OneToOne(mappedBy = "registration")
     private Personal personal;
-
     @OneToOne(mappedBy = "registration")
     private Experience experience;
-
-    @OneToOne(mappedBy = "registration")
-    private Comments comments;
-
+    @Column
     private Integer score;
+    @Column
     private String motivation;
     @Column(name="preferredos")
     private String preferredOs;
