@@ -1,9 +1,9 @@
 package com.hackathon.event.model.enumeration;
 
-public enum Skills {
+public enum SkillType {
     API,
     Spring,
-    Spring_Boot,
+    SpringBoot,
     Java,
     Hibernate,
     JPA,

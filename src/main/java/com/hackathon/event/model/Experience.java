@@ -1,7 +1,6 @@
 package com.hackathon.event.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hackathon.event.model.enumeration.Skills;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="experience")
+@Table(name="experiences")
 @Getter
 @Setter
 public class Experience {
@@ -23,12 +22,15 @@ public class Experience {
     @JsonIgnore
     private Registration registration;
 
-    @Column
+    @Column(name = "years")
     private Integer years;
+
     @OneToMany(mappedBy = "experience")
     private List<Skill> skills;
+
     @Column(name="repositoryurl")
     private String repositoryUrl;
-    @Column
+
+    @Column(name = "summary")
     private String summary;
 }

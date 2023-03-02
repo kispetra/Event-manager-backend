@@ -1,7 +1,7 @@
 package com.hackathon.event.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hackathon.event.model.enumeration.Skills;
+import com.hackathon.event.model.enumeration.SkillType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +22,6 @@ public class Skill {
     @JsonIgnore
     private Experience experience;
 
-    @Column
-    private Skills skill;
+    @Column(name = "skill_type")
+    private SkillType skill;
 }

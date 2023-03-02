@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RegistrationController {
     private final RegistrationService registrationService;
-
-
+    
     @PostMapping("/event/{eventId}/registrations")
-    public ResponseEntity<String> save(@PathVariable Long eventId, @RequestBody RegistrationRequestDto registrationRequestDto){
-      return registrationService.save(eventId,registrationRequestDto);
-   }
+    public void save(@PathVariable Long eventId, @RequestBody RegistrationRequestDto registrationRequestDto){
+        registrationService.save(eventId,registrationRequestDto);
+    }
 }
