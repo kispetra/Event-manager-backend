@@ -6,6 +6,7 @@ import com.hackathon.event.model.*;
 import com.hackathon.event.model.enumeration.SkillType;
 import com.hackathon.event.repository.*;
 import com.hackathon.event.service.RegistrationService;
+import com.hackathon.event.util.ScoringEngine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void save(Long eventId, RegistrationRequestDto registrationRequestDto) {
+        ScoringEngine scoringEngine = new ScoringEngine();
+        Integer score = scoringEngine.CalculateScore(registrationRequestDto);
+
         Event event=eventRepository.findById(eventId).orElseThrow(()-> new EntityNotFoundException());
         Registration registration = registrationMapper.toEntity(registrationRequestDto, event);
 
@@ -41,6 +45,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Experience experience = registration.getExperience();
         experience.setRegistration(registration);
         registration.setExperience(experience);
+        registration.setScore(score);
 
         registrationRepository.save(registration);
 

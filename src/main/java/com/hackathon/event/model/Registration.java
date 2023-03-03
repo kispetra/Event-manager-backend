@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="registrations")
@@ -28,8 +29,13 @@ public class Registration {
     @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Experience experience;
 
+
+
     @Column
     private Integer score;
+
+    @OneToMany(mappedBy = "registration")
+    private List<Comment> comment;
 
     @Column
     private String motivation;
