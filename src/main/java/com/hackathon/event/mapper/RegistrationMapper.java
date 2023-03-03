@@ -12,8 +12,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RegistrationMapper {
-    public Registration toEntity(RegistrationRequestDto requestDto){
+    public Registration toEntity(RegistrationRequestDto requestDto, Event event){
         Registration registration = new Registration();
+        registration.setEvent(event);
         registration.setPreferredOs(requestDto.getPreferredOS());
         registration.setMotivation(requestDto.getMotivation());
 
