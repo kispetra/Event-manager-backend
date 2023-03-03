@@ -2,8 +2,12 @@ package com.hackathon.event.mapper;
 
 import com.hackathon.event.dto.RegistrationRequestDto;
 import com.hackathon.event.model.*;
+import com.hackathon.event.model.enumeration.SkillType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +21,21 @@ public class RegistrationMapper {
         experience.setYears(requestDto.getExperience().getYears());
         experience.setRepositoryUrl(requestDto.getExperience().getRepositoryUrl());
         experience.setSummary(requestDto.getExperience().getSummary());
-//        experience.setSkills(requestDto.getExperience().getSkills());
+
+        List<Skill> skills = new ArrayList<>();
+        for(String skill : requestDto.getExperience().getSkills()){
+            if(skillTypeExists(skill)){
+                Skill skillToSave = new Skill();
+                skillToSave.setSkillType(SkillType.valueOf(skill));
+                skills.add(skillToSave);
+            }
+        }
+
+        for (Skill skill : skills){
+            skill.setExperience(experience);
+        }
+
+        experience.setSkills(skills);
 
         Personal personal = new Personal();
 
@@ -40,5 +58,15 @@ public class RegistrationMapper {
         registration.setPersonal(personal);
 
         return registration;
+    }
+
+    // TODO: move this to validation
+    private boolean skillTypeExists(String skillType){
+        for (SkillType skill : SkillType.values()) {
+            if (skill.name().equals(skillType)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

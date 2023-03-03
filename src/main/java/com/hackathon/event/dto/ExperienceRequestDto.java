@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 public class ExperienceRequestDto {
     private Integer years;
-    private List<SkillType> skills;
+    private List<String> skills;
     private String repositoryUrl;
     private String summary;
 

@@ -3,6 +3,7 @@ package com.hackathon.event.service.impl;
 import com.hackathon.event.dto.RegistrationRequestDto;
 import com.hackathon.event.mapper.RegistrationMapper;
 import com.hackathon.event.model.*;
+import com.hackathon.event.model.enumeration.SkillType;
 import com.hackathon.event.repository.*;
 import com.hackathon.event.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final RegistrationRepository registrationRepository;
     private final RegistrationMapper registrationMapper;
+    private final SkillRepository skillRepository;
 
 
     @Override
@@ -37,6 +39,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         registration.setExperience(experience);
 
         registrationRepository.save(registration);
+
+        for(Skill skill : registration.getExperience().getSkills()){
+            skill.setExperience(experience);
+            skillRepository.save(skill);
+        }
 
         //TODO: return response entity
     }

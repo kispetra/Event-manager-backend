@@ -1,6 +1,7 @@
 package com.hackathon.event.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "experience_sequence")
     @SequenceGenerator(name="experience_sequence", allocationSize = 1)
+    @Column(name = "experience_id")
     private Long experienceId;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -26,6 +28,7 @@ public class Experience {
     private Integer years;
 
     @OneToMany(mappedBy = "experience")
+    @JsonManagedReference
     private List<Skill> skills;
 
     @Column(name="repositoryurl")
