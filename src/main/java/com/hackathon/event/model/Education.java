@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="education")
+@Table(name="educations")
 @Getter
 @Setter
 public class Education {
@@ -21,8 +21,9 @@ public class Education {
     @JsonIgnore
     private Personal personal;
 
-    @Column
+    @Column(name = "faculty")
     private String faculty;
-    @Column
+
+    @Column(name = "year")
     private Integer year;
 }

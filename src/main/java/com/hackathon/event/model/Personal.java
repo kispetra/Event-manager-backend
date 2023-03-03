@@ -17,19 +17,23 @@ public class Personal {
     @Column(name="personal_id")
     private Long personalId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="registration_id")
     @JsonIgnore
     private Registration registration;
 
-    @OneToOne(mappedBy = "personal")
+    @OneToOne(mappedBy = "personal", cascade = CascadeType.ALL)
     private Name name;
+
     @Column
     private String email;
+
     @Column
     private String phone;
-    @OneToOne(mappedBy = "personal")
+
+    @OneToOne(mappedBy = "personal", cascade = CascadeType.ALL)
     private Education education;
+
     @Column
     private String summary;
 

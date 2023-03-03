@@ -1,6 +1,5 @@
 package com.hackathon.event.dto;
 
-import com.hackathon.event.model.Personal;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +8,7 @@ import lombok.Setter;
 public class RegistrationRequestDto {
     PersonalRequestDto personal;
     ExperienceRequestDto experience;
-
     private String motivation;
-    private String preferredOs;
+    private String preferredOS;
 
 }

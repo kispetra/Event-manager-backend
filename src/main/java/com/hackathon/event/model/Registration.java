@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="registration")
+@Table(name="registrations")
 @Getter
 @Setter
 public class Registration {
@@ -15,14 +15,19 @@ public class Registration {
     @SequenceGenerator(name="registration_sequence", allocationSize = 1)
     @Column(name="registration_id")
     private Long registrationId;
-    @OneToOne(mappedBy = "registration")
+
+    @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Personal personal;
-    @OneToOne(mappedBy = "registration")
+
+    @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Experience experience;
+
     @Column
     private Integer score;
+
     @Column
     private String motivation;
+
     @Column(name="preferredos")
     private String preferredOs;
 }

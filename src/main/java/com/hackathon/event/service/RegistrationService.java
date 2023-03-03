@@ -5,5 +5,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface RegistrationService {
 
-    ResponseEntity<String> save(Long eventId, RegistrationRequestDto registrationRequestDto);
+    void save(Long eventId, RegistrationRequestDto registrationRequestDto);
 }

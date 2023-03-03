@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="name")
+@Table(name="names")
 @Getter
 @Setter
 public class Name {
@@ -16,14 +16,14 @@ public class Name {
     @SequenceGenerator(name="name_sequence", allocationSize = 1)
     private Long nameId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="personal_id")
     @JsonIgnore
     private Personal personal;
 
-    @Column(name="firstname")
+    @Column(name="first_name")
     private String firstName;
 
-    @Column(name="lastname")
+    @Column(name="last_name")
     private String lastName;
 }
