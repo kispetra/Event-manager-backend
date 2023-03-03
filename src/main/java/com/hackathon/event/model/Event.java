@@ -34,6 +34,10 @@ public class Event {
     private Date startDate;
     @Column
     private int weeks;
+    @Column
+    @JsonManagedReference
+    @OneToMany(mappedBy = "event")
+    private List<Registration> registrations;
 
 
 }

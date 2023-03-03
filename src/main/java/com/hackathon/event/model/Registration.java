@@ -1,5 +1,6 @@
 package com.hackathon.event.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,11 @@ public class Registration {
     @SequenceGenerator(name="registration_sequence", allocationSize = 1)
     @Column(name="registration_id")
     private Long registrationId;
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name="event_id")
+    private Event event;
 
     @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Personal personal;
