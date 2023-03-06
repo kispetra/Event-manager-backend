@@ -7,10 +7,7 @@ import com.hackathon.event.repository.SkillRepository;
 import com.hackathon.event.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +20,8 @@ public class RegistrationController {
         registrationService.save(eventId,registrationRequestDto);
     }
 
-    
+    @DeleteMapping("/event/{eventId}/registrations/{registrationId}")
+    public void deleteById(@PathVariable Long eventId,@PathVariable Long registrationId){
+        registrationService.deleteById(eventId,registrationId);
+    }
 }
