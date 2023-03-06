@@ -57,7 +57,6 @@ public class RegistrationMapper {
 
         registration.setExperience(experience);
         registration.setPersonal(personal);
-
         return registration;
     }
 

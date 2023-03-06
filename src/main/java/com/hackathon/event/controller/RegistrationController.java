@@ -1,6 +1,7 @@
 package com.hackathon.event.controller;
 
 import com.hackathon.event.dto.RegistrationRequestDto;
+import com.hackathon.event.dto.ScoreRequestDto;
 import com.hackathon.event.model.Skill;
 import com.hackathon.event.model.enumeration.SkillType;
 import com.hackathon.event.repository.SkillRepository;
@@ -23,5 +24,10 @@ public class RegistrationController {
     @DeleteMapping("/event/{eventId}/registrations/{registrationId}")
     public void deleteById(@PathVariable Long eventId,@PathVariable Long registrationId){
         registrationService.deleteById(eventId,registrationId);
+    }
+
+    @PutMapping("/event/{eventId}/registrations/{registrationId}/score")
+    public ResponseEntity<String> score(@PathVariable Long eventId, @PathVariable Long registrationId, @RequestBody ScoreRequestDto scoreRequestDto){
+        return registrationService.score(eventId,registrationId,scoreRequestDto);
     }
 }
