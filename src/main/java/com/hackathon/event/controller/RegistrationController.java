@@ -22,4 +22,6 @@ public class RegistrationController {
     public void save(@PathVariable Long eventId, @RequestBody RegistrationRequestDto registrationRequestDto){
         registrationService.save(eventId,registrationRequestDto);
     }
+
+    
 }
