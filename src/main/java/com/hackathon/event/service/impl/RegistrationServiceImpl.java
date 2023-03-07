@@ -9,6 +9,8 @@ import com.hackathon.event.repository.*;
 import com.hackathon.event.service.RegistrationService;
 import com.hackathon.event.util.ScoringEngine;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -111,5 +113,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         RegistrationResponseDto registrationResponseDto= registrationMapper.toDto(registration);
 
         return registrationResponseDto;
+    }
+
+    @Override
+    public Page<RegistrationResponseDto> getAllRegistrations(Long eventId, Pageable pageable) {
+        return registrationRepository.getAllRegistrationsByEventId(eventId, pageable).map(registrationMapper::toDto);
     }
 }

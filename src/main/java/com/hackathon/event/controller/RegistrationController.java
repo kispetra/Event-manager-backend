@@ -6,6 +6,8 @@ import com.hackathon.event.dto.CommentRequestDto;
 import com.hackathon.event.repository.SkillRepository;
 import com.hackathon.event.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,5 +34,10 @@ public class RegistrationController {
     @GetMapping("/event/{eventId}/registrations/{registrationId}")
     public RegistrationResponseDto fetchById(@PathVariable Long eventId, @PathVariable Long registrationId){
         return registrationService.fetchById(eventId,registrationId);
+    }
+
+    @GetMapping("/event/{eventId}/registrations")
+    public Page<RegistrationResponseDto> getAllRegistrations(@PathVariable Long eventId, Pageable pageable){
+        return registrationService.getAllRegistrations(eventId, pageable);
     }
 }
