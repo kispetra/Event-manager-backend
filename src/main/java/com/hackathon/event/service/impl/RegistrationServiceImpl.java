@@ -1,16 +1,17 @@
 package com.hackathon.event.service.impl;
 
 import com.hackathon.event.dto.RegistrationRequestDto;
-import com.hackathon.event.dto.ScoreRequestDto;
+import com.hackathon.event.dto.RegistrationResponseDto;
+import com.hackathon.event.dto.CommentRequestDto;
 import com.hackathon.event.mapper.RegistrationMapper;
 import com.hackathon.event.model.*;
-import com.hackathon.event.model.enumeration.SkillType;
 import com.hackathon.event.repository.*;
 import com.hackathon.event.service.RegistrationService;
 import com.hackathon.event.util.ScoringEngine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -74,7 +75,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public ResponseEntity<String> score(Long eventId, Long registrationId, ScoreRequestDto scoreRequestDto) {
+    public ResponseEntity<String> score(Long eventId, Long registrationId, CommentRequestDto scoreRequestDto) {
         Registration registration = registrationRepository.findById(registrationId).orElseThrow(() -> new EntityNotFoundException("Registration doesn't exist"));
         if (scoreRequestDto.getScore().charAt(0) == '+') {
             String valueText = scoreRequestDto.getScore().substring(1);
@@ -99,5 +100,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         commentRepository.save(comment);
 
         return ResponseEntity.ok("Saved");
+    }
+
+    public RegistrationResponseDto fetchById(@PathVariable Long eventId, @PathVariable Long registrationId){
+        Event event = eventRepository.findById(eventId).orElseThrow
+                     (() -> new EntityNotFoundException("Event not found"));
+        Registration registration = registrationRepository.findById(registrationId).orElseThrow
+                     (() -> new EntityNotFoundException("Registration not found"));
+
+        RegistrationResponseDto registrationResponseDto= registrationMapper.toDto(registration);
+
+        return registrationResponseDto;
     }
 }
