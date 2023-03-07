@@ -1,9 +1,8 @@
 package com.hackathon.event.controller;
 
 import com.hackathon.event.dto.RegistrationRequestDto;
-import com.hackathon.event.dto.ScoreRequestDto;
-import com.hackathon.event.model.Skill;
-import com.hackathon.event.model.enumeration.SkillType;
+import com.hackathon.event.dto.RegistrationResponseDto;
+import com.hackathon.event.dto.CommentRequestDto;
 import com.hackathon.event.repository.SkillRepository;
 import com.hackathon.event.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,11 @@ public class RegistrationController {
     }
 
     @PutMapping("/event/{eventId}/registrations/{registrationId}/score")
-    public ResponseEntity<String> score(@PathVariable Long eventId, @PathVariable Long registrationId, @RequestBody ScoreRequestDto scoreRequestDto){
+    public ResponseEntity<String> score(@PathVariable Long eventId, @PathVariable Long registrationId, @RequestBody CommentRequestDto scoreRequestDto){
         return registrationService.score(eventId,registrationId,scoreRequestDto);
+    }
+    @GetMapping("/event/{eventId}/registrations/{registrationId}")
+    public RegistrationResponseDto fetchById(@PathVariable Long eventId, @PathVariable Long registrationId){
+        return registrationService.fetchById(eventId,registrationId);
     }
 }

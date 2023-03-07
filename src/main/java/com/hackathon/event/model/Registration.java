@@ -29,8 +29,6 @@ public class Registration {
     @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Experience experience;
 
-
-
     @Column
     private Integer score;
 
