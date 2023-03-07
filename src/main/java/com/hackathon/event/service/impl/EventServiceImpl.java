@@ -1,6 +1,7 @@
 package com.hackathon.event.service.impl;
 
 import com.hackathon.event.dto.EventRequestDto;
+import com.hackathon.event.dto.ParticipantRequestDto;
 import com.hackathon.event.mapper.EventMapper;
 import com.hackathon.event.model.Event;
 import com.hackathon.event.model.Mentor;
@@ -10,7 +11,10 @@ import com.hackathon.event.repository.MentorRepository;
 import com.hackathon.event.repository.TeamRepository;
 import com.hackathon.event.service.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +36,10 @@ public class EventServiceImpl implements EventService {
                 mentorRepository.save(mentor);
             }
         }
+    }
+
+    @Override
+    public ResponseEntity<String> invite(List<ParticipantRequestDto> participantRequestDtos) {
+
     }
 }
