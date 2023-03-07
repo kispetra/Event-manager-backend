@@ -1,5 +1,6 @@
 package com.hackathon.event.service.impl;
 
+import com.hackathon.event.dto.ConfirmationRequestDto;
 import com.hackathon.event.dto.RegistrationRequestDto;
 import com.hackathon.event.dto.RegistrationResponseDto;
 import com.hackathon.event.dto.CommentRequestDto;
@@ -103,7 +104,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         return ResponseEntity.ok("Saved");
     }
-
+    @Override
     public RegistrationResponseDto fetchById(@PathVariable Long eventId, @PathVariable Long registrationId){
         Event event = eventRepository.findById(eventId).orElseThrow
                      (() -> new EntityNotFoundException("Event not found"));
@@ -119,4 +120,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     public Page<RegistrationResponseDto> getAllRegistrations(Long eventId, Pageable pageable) {
         return registrationRepository.getAllRegistrationsByEventId(eventId, pageable).map(registrationMapper::toDto);
     }
+    @Override
+    public void patchById(Long eventId, Long registrationId, ConfirmationRequestDto confirmationRequestDto){
+        Event event = eventRepository.findById(eventId).orElseThrow
+                (() -> new EntityNotFoundException("Event not found"));
+        Registration registration = registrationRepository.findById(registrationId).orElseThrow
+                (() -> new EntityNotFoundException("Registration not found"));
+
+        registration.setParticipation(confirmationRequestDto.getParticipation());
+        registration.setKickoff(confirmationRequestDto.getKickoff());
+        registration.setTshirt(confirmationRequestDto.getTshirt());
+        registration.setGitlab(confirmationRequestDto.getGitlab());
+
+        registrationRepository.save(registration);
+    }
+
 }
