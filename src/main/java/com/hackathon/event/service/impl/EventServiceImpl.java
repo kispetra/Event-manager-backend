@@ -36,6 +36,8 @@ public class EventServiceImpl implements EventService {
     private final EventMapper eventMapper;
     private final TeamRepository teamRepository;
     private final MentorRepository mentorRepository;
+    private final RegistrationRepository registrationRepository;
+    private final ParticipantRepository participantRepository;
 
     public void save(EventRequestDto eventRequestDto){
         Event event = eventMapper.toEntity(eventRequestDto);
@@ -50,20 +52,6 @@ public class EventServiceImpl implements EventService {
         }
     }
 
-    @Override
-    public TeamUpResponseDto teamUp(Long eventId) {
-        TeamUpResponseDto teamUpResponseDto = new TeamUpResponseDto();
-
-//        Event event = eventRepository.getReferenceById(eventId);
-//        List<Registration> allRegistrations = event.getRegistrations();
-//        for(Registration registration : allRegistrations){
-//            if(registration.getParticipation()) {
-//
-//            }
-//        }
-
-        return teamUpResponseDto;
-    }
 
     @Override
     public ResponseEntity<String> invite(Long eventId,ParticipantListRequestDto participantListRequestDto) {
@@ -90,5 +78,36 @@ public class EventServiceImpl implements EventService {
             System.out.println("Poslan mail"+ participant.getEmail());
         }
         return ResponseEntity.ok("All mails sent");
+    }
+
+
+    @Override
+    public TeamUpResponseDto teamUp(Long eventId) {
+        TeamUpResponseDto teamUpResponseDto = new TeamUpResponseDto();
+
+        Event event = eventRepository.findById(eventId).orElseThrow(
+                () -> new EntityNotFoundException("Event not found")
+        );
+        Integer numberOfPartitions = event.getTeams().size();
+        List<Registration> allRegistrations = event.getRegistrations();
+
+        /*
+         *To partition the registrations into teams, we first sort
+         *  the registrations by score in descending order.
+         *  Then we loop through the registrations and add them
+         *  to a team until we reach the team size. We repeat this process
+         *  for all the registrations until we have formed all the teams.
+         *  Finally, we print out the teams and their registrations.
+        * */
+
+        return teamUpResponseDto;
+    }
+
+    public List<Registration> sortRegistsrations(List<Registration> registrations){
+        List<Registration> sortedRegistration = new ArrayList<>();
+
+
+
+        return sortedRegistration;
     }
 }
