@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class ParticipantRequestDto {
     private String email;
-    private Integer registrationId;
+    private Long registrationId;
 }

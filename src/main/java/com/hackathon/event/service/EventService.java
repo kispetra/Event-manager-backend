@@ -1,6 +1,7 @@
 package com.hackathon.event.service;
 
 import com.hackathon.event.dto.EventRequestDto;
+import com.hackathon.event.dto.ParticipantListRequestDto;
 import com.hackathon.event.dto.ParticipantRequestDto;
 import org.springframework.http.ResponseEntity;
 
@@ -10,5 +11,5 @@ public interface EventService {
 
     void save(EventRequestDto eventRequestDto);
 
-    ResponseEntity<String> invite(List<ParticipantRequestDto> participantRequestDtos);
+    ResponseEntity<String> invite(Long eventId, ParticipantListRequestDto participantListRequestDto);
 }
