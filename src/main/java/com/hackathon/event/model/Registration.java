@@ -29,6 +29,10 @@ public class Registration {
     @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Experience experience;
 
+
+    @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
+    private Participant participant;
+
     @Column
     private Integer score;
 
