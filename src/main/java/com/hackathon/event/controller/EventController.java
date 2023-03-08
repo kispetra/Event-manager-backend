@@ -1,11 +1,11 @@
 package com.hackathon.event.controller;
 
 import com.hackathon.event.dto.EventRequestDto;
+import com.hackathon.event.dto.TeamResponseDto;
+import com.hackathon.event.dto.TeamUpResponseDto;
 import com.hackathon.event.service.EventService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,5 +15,10 @@ public class EventController {
     @PostMapping("/event")
     public void save(@RequestBody EventRequestDto eventRequestDto){
         eventService.save(eventRequestDto);
+    }
+
+    @PutMapping("/event/{eventId}/team-up")
+    public TeamUpResponseDto teamUp(@PathVariable Long eventId){
+        return eventService.teamUp(eventId);
     }
 }
