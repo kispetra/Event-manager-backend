@@ -14,7 +14,7 @@ import java.util.List;
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_sequence")
-    @SequenceGenerator(name="event_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "event_sequence", allocationSize = 1)
     @Column(name = "event_id")
     private Long eventId;
     @Column
@@ -22,15 +22,15 @@ public class Event {
     @OneToMany(mappedBy = "event")
     @JsonManagedReference
     private List<Team> teams;
-    @Column(name="maxparticipants")
+    @Column(name = "maxparticipants")
     private Integer maxParticipants;
-    @Column(name="registrationsnotbefore")
+    @Column(name = "registrationsnotbefore")
     private Date registrationsNotBefore;
-    @Column(name="registrationsnotafter")
+    @Column(name = "registrationsnotafter")
     private Date registrationsNotAfter;
-    @Column(name="confirmationnotafter")
+    @Column(name = "confirmationnotafter")
     private Date confirmationNotAfter;
-    @Column(name="startdate")
+    @Column(name = "startdate")
     private Date startDate;
     @Column
     private int weeks;
@@ -38,6 +38,5 @@ public class Event {
     @JsonManagedReference
     @OneToMany(mappedBy = "event")
     private List<Registration> registrations;
-
 
 }
