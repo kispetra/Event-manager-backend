@@ -1,5 +1,6 @@
 package com.hackathon.event.controller;
 
+import com.hackathon.event.dto.ConfirmationRequestDto;
 import com.hackathon.event.dto.RegistrationRequestDto;
 import com.hackathon.event.dto.RegistrationResponseDto;
 import com.hackathon.event.dto.CommentRequestDto;
@@ -39,5 +40,10 @@ public class RegistrationController {
     @GetMapping("/event/{eventId}/registrations")
     public Page<RegistrationResponseDto> getAllRegistrations(@PathVariable Long eventId, Pageable pageable){
         return registrationService.getAllRegistrations(eventId, pageable);
+    }
+    @PatchMapping("/event/{eventId}/registrations/{registrationId}")
+    public void patchById(@PathVariable Long eventId, @PathVariable Long registrationId, @RequestBody ConfirmationRequestDto confirmationRequestDto){
+        registrationService.patchById(eventId, registrationId, confirmationRequestDto);
+
     }
 }

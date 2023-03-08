@@ -1,5 +1,6 @@
 package com.hackathon.event.service;
 
+import com.hackathon.event.dto.ConfirmationRequestDto;
 import com.hackathon.event.dto.RegistrationRequestDto;
 import com.hackathon.event.dto.RegistrationResponseDto;
 import com.hackathon.event.dto.CommentRequestDto;
@@ -16,4 +17,5 @@ public interface RegistrationService {
     RegistrationResponseDto fetchById(Long eventId, Long registrationId);
 
     Page<RegistrationResponseDto> getAllRegistrations(Long eventId, Pageable pageable);
+    void patchById(Long eventId, Long registrationId, ConfirmationRequestDto confirmationRequestDto);
 }

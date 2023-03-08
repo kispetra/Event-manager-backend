@@ -40,4 +40,12 @@ public class Registration {
 
     @Column(name="preferredos")
     private String preferredOs;
+    @Column
+    private Boolean participation;
+    @Column
+    private Boolean kickoff;
+    @Column
+    private String tshirt;
+    @Column
+    private String gitlab;
 }
