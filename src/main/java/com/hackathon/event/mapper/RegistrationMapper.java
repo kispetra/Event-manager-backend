@@ -19,6 +19,7 @@ public class RegistrationMapper {
         registration.setPreferredOs(requestDto.getPreferredOS());
         registration.setMotivation(requestDto.getMotivation());
 
+
         Experience experience = new Experience();
         experience.setYears(requestDto.getExperience().getYears());
         experience.setRepositoryUrl(requestDto.getExperience().getRepositoryUrl());
