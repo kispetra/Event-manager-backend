@@ -1,6 +1,7 @@
 package com.hackathon.event.controller;
 
 import com.hackathon.event.dto.EventRequestDto;
+import com.hackathon.event.dto.TeamResponseDto;
 import com.hackathon.event.dto.TeamUpResponseDto;
 import com.hackathon.event.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class EventController {
     }
 
     @PutMapping("/event/{eventId}/team-up")
-    public List<TeamUpResponseDto> teamUp(@PathVariable Long eventId){
+    public TeamUpResponseDto teamUp(@PathVariable Long eventId){
         return eventService.teamUp(eventId);
     }
 }

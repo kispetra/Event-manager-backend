@@ -2,11 +2,7 @@ package com.hackathon.event.service.impl;
 
 import com.hackathon.event.dto.EventRequestDto;
 import com.hackathon.event.dto.ParticipantListResponseDto;
-import com.hackathon.event.dto.ParticipantListResponseDto;
 import com.hackathon.event.dto.TeamResponseDto;
-import com.hackathon.event.dto.TeamUpResponseDto;
-import com.hackathon.event.dto.ParticipantListRequestDto;
-import com.hackathon.event.dto.ParticipantRequestDto;
 import com.hackathon.event.dto.TeamUpResponseDto;
 import com.hackathon.event.mapper.EventMapper;
 import com.hackathon.event.model.*;
@@ -89,8 +85,8 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public List<TeamUpResponseDto> teamUp(Long eventId) {
-        List<TeamUpResponseDto> teamUpResponseDto = new ArrayList<>();
+    public TeamUpResponseDto teamUp(Long eventId) {
+        TeamUpResponseDto response = new TeamUpResponseDto();
 
         Event event = eventRepository.findById(eventId).orElseThrow(
                 () -> new EntityNotFoundException("Event not found")
@@ -99,30 +95,36 @@ public class EventServiceImpl implements EventService {
         List<Team> teams = event.getTeams();
         Integer numberOfTeams = event.getTeams().size();
 
-        /*
-         *  To partition the registrations into teams, we first sort
-         *  the registrations by score in descending order.
-         *  Then we loop through the registrations and add them
-         *  to a team until we reach the team size. We repeat this process
-         *  for all the registrations until we have formed all the teams.
-         *  Finally, we print out the teams and their registrations.
-         * */
-
         sortRegistsrations(allRegistrations);
 
-
         for(Integer i = 0; i < allRegistrations.size(); i++){
+            Integer teamIndex = i % numberOfTeams;
             Registration registration = allRegistrations.get(i);
-            teams.get(i % numberOfTeams).getMembers().add(registration.getParticipant());
+            teams.get(teamIndex).getMembers().add(registration.getParticipant());
+
+            // doesnt work without this for some reason
+            System.out.println(teams.get(i % numberOfTeams).getMembers().size());
         }
+
+        List<TeamResponseDto> teamResponses = new ArrayList<>();
 
         for(Team team : teams){
+            List<String> teamMembers = new ArrayList<>();
+            TeamResponseDto teamResponse = new TeamResponseDto();
+
             for(Participant participant : team.getMembers()){
-                System.out.println(participant.getEmail());
+                participant.setTeam(team);
+                participantRepository.save(participant);
+                teamMembers.add(participant.getEmail());
             }
+            teamResponse.setName(team.getName());
+            teamResponse.setMembers(teamMembers);
+            teamResponses.add(teamResponse);
         }
 
-        return teamUpResponseDto;
+        response.setTeams(teamResponses);
+
+        return response;
     }
 
     public void sortRegistsrations(List<Registration> registrations){

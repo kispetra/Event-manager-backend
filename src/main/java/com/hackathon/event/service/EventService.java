@@ -1,8 +1,7 @@
 package com.hackathon.event.service;
 
 import com.hackathon.event.dto.EventRequestDto;
-import com.hackathon.event.dto.ParticipantListRequestDto;
-import com.hackathon.event.dto.ParticipantRequestDto;
+import com.hackathon.event.dto.TeamResponseDto;
 import com.hackathon.event.dto.TeamUpResponseDto;
 import org.springframework.http.ResponseEntity;
 
@@ -14,6 +13,6 @@ public interface EventService {
 
     ResponseEntity<?> invite(Long eventId);
 
-    List<TeamUpResponseDto> teamUp(Long eventId);
+    TeamUpResponseDto teamUp(Long eventId);
 
 }
