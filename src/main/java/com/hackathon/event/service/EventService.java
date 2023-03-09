@@ -12,7 +12,8 @@ import java.util.List;
 public interface EventService {
 
     void save(EventRequestDto eventRequestDto);
-    TeamUpResponseDto teamUp(Long eventId);
+
+    List<TeamUpResponseDto> teamUp(Long eventId);
 
     ResponseEntity<String> invite(Long eventId, ParticipantListRequestDto participantListRequestDto);
 }

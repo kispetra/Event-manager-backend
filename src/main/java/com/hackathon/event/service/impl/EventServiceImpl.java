@@ -21,11 +21,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -82,17 +80,18 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public TeamUpResponseDto teamUp(Long eventId) {
-        TeamUpResponseDto teamUpResponseDto = new TeamUpResponseDto();
+    public List<TeamUpResponseDto> teamUp(Long eventId) {
+        List<TeamUpResponseDto> teamUpResponseDto = new ArrayList<>();
 
         Event event = eventRepository.findById(eventId).orElseThrow(
                 () -> new EntityNotFoundException("Event not found")
         );
-        Integer numberOfPartitions = event.getTeams().size();
         List<Registration> allRegistrations = event.getRegistrations();
+        List<Team> teams = event.getTeams();
+        Integer numberOfTeams = event.getTeams().size();
 
         /*
-         *To partition the registrations into teams, we first sort
+         *  To partition the registrations into teams, we first sort
          *  the registrations by score in descending order.
          *  Then we loop through the registrations and add them
          *  to a team until we reach the team size. We repeat this process
@@ -100,14 +99,24 @@ public class EventServiceImpl implements EventService {
          *  Finally, we print out the teams and their registrations.
         * */
 
+        sortRegistsrations(allRegistrations);
+
+
+        for(Integer i = 0; i < allRegistrations.size(); i++){
+            Registration registration = allRegistrations.get(i);
+            teams.get(i % numberOfTeams).getMembers().add(registration.getParticipant());
+        }
+
+        for(Team team : teams){
+            for(Participant participant : team.getMembers()){
+                System.out.println(participant.getEmail());
+            }
+        }
+
         return teamUpResponseDto;
     }
 
-    public List<Registration> sortRegistsrations(List<Registration> registrations){
-        List<Registration> sortedRegistration = new ArrayList<>();
-
-
-
-        return sortedRegistration;
+    public void sortRegistsrations(List<Registration> registrations){
+        registrations.sort(Comparator.comparing(Registration::getScore));
     }
 }

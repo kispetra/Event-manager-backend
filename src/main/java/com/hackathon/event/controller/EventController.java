@@ -29,7 +29,7 @@ public class EventController {
     }
 
     @PutMapping("/event/{eventId}/team-up")
-    public TeamUpResponseDto teamUp(@PathVariable Long eventId){
+    public List<TeamUpResponseDto> teamUp(@PathVariable Long eventId){
         return eventService.teamUp(eventId);
     }
 }
