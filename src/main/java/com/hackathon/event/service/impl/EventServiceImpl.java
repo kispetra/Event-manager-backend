@@ -1,8 +1,7 @@
 package com.hackathon.event.service.impl;
 
 import com.hackathon.event.dto.EventRequestDto;
-import com.hackathon.event.dto.ParticipantListRequestDto;
-import com.hackathon.event.dto.ParticipantRequestDto;
+import com.hackathon.event.dto.ParticipantListResponseDto;
 import com.hackathon.event.mapper.EventMapper;
 import com.hackathon.event.model.*;
 import com.hackathon.event.repository.*;
@@ -13,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -42,29 +43,34 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public ResponseEntity<String> invite(Long eventId,ParticipantListRequestDto participantListRequestDto) {
-        participantListRequestDto.getParticipants().sort(Comparator.comparing(p -> {
-            Registration registration = registrationRepository.findById(p.getRegistrationId()).orElseThrow(() -> new EntityNotFoundException("Registration doesn't exist"));
-            return registration.getScore();
-        }, Comparator.reverseOrder()));
+    public ResponseEntity<?> invite(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow
+                (() -> new EntityNotFoundException("Event not found"));
 
-        for (ParticipantRequestDto participantRequestDto: participantListRequestDto.getParticipants()) {
+        ParticipantListResponseDto participantListResponseDto = new ParticipantListResponseDto();
+        List<Participant> participants = new ArrayList<>();
+
+        Collections.sort(event.getRegistrations(), Comparator.comparing(Registration::getScore).reversed());
+
+        for (Registration registration: event.getRegistrations()) {
             Participant participant = new Participant();
-            participant.setEmail(participantRequestDto.getEmail());
-
-            Registration registration = registrationRepository.findById(participantRequestDto.getRegistrationId()).orElseThrow(() -> new EntityNotFoundException("Registration doesn't exist"));
+            participant.setEmail(registration.getPersonal().getEmail());
             participant.setRegistration(registration);
             participantRepository.save(participant);
 
+            participants.add(participant);
+
             String emailSubject = "Invitation to event";
             String emailText = "" +
-                    "Dear " + participant.getEmail() + ", \n\n" +
+                    "Dear " + registration.getPersonal().getEmail() + ", \n\n" +
                     "Invited to event" +
                     "\n\n Lp, Your organiser";
 
       //      emailService.send(participant.getEmail(), emailSubject, emailText);
-            System.out.println("Poslan mail"+ participant.getEmail());
+            System.out.println("Poslan mail"+ registration.getPersonal().getEmail());
         }
-        return ResponseEntity.ok("All mails sent");
+        participantListResponseDto.setParticipants(participants);
+
+        return ResponseEntity.ok(participantListResponseDto);
     }
 }
