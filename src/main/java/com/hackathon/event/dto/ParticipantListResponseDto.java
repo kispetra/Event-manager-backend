@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-
 @Getter
 @Setter
-public class ParticipantListRequestDto {
-    List<ParticipantRequestDto> participants;
+public class ParticipantListResponseDto {
+    List<Participant> participants;
 }

@@ -7,12 +7,11 @@ import com.hackathon.event.dto.ParticipantListRequestDto;
 import com.hackathon.event.dto.ParticipantRequestDto;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 public interface EventService {
 
     void save(EventRequestDto eventRequestDto);
 
+    ResponseEntity<?> invite(Long eventId);
     List<TeamUpResponseDto> teamUp(Long eventId);
 
     ResponseEntity<String> invite(Long eventId, ParticipantListRequestDto participantListRequestDto);

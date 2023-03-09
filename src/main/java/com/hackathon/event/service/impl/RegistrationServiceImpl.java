@@ -61,6 +61,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             skillRepository.save(skill);
         }
 
+        String emailSubject = "Registration filled";
+        String emailText = "" +
+                "Dear " + registration.getPersonal().getName().getFirstName() + ", \n\n" +
+                "Registration done right" +
+                "\n\n Lp, Your organiser";
+
+        //      emailService.send(participant.getEmail(), emailSubject, emailText);
+        System.out.println("Poslan mail" +" " + registration.getPersonal().getName().getFirstName() );
+
         //TODO: return response entity
     }
 
@@ -133,6 +142,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         registration.setGitlab(confirmationRequestDto.getGitlab());
 
         registrationRepository.save(registration);
+
+        String emailSubject = "Participation confirmed";
+        String emailText = "" +
+                "Dear " + registration.getPersonal().getName().getFirstName() + ", \n\n" +
+                "Confirmation confirmed" +
+                "\n\n Lp, Your organiser";
+
+        //      emailService.send(participant.getEmail(), emailSubject, emailText);
+        System.out.println("Potvrdio" +" " + registration.getPersonal().getName().getFirstName() );
+
     }
 
 }
