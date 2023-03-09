@@ -1,17 +1,13 @@
 package com.hackathon.event.controller;
 
 import com.hackathon.event.dto.EventRequestDto;
-import com.hackathon.event.dto.TeamResponseDto;
 import com.hackathon.event.dto.TeamUpResponseDto;
-import com.hackathon.event.dto.ParticipantListRequestDto;
-import com.hackathon.event.dto.ParticipantRequestDto;
 import com.hackathon.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor

@@ -2,10 +2,12 @@ package com.hackathon.event.service.impl;
 
 import com.hackathon.event.dto.EventRequestDto;
 import com.hackathon.event.dto.ParticipantListResponseDto;
+import com.hackathon.event.dto.ParticipantListResponseDto;
 import com.hackathon.event.dto.TeamResponseDto;
 import com.hackathon.event.dto.TeamUpResponseDto;
 import com.hackathon.event.dto.ParticipantListRequestDto;
 import com.hackathon.event.dto.ParticipantRequestDto;
+import com.hackathon.event.dto.TeamUpResponseDto;
 import com.hackathon.event.mapper.EventMapper;
 import com.hackathon.event.model.*;
 import com.hackathon.event.repository.*;
@@ -21,8 +23,6 @@ import com.hackathon.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -40,6 +40,7 @@ public class EventServiceImpl implements EventService {
     private final MentorRepository mentorRepository;
     private final RegistrationRepository registrationRepository;
     private final ParticipantRepository participantRepository;
+    private final EmailService emailService;
 
     public void save(EventRequestDto eventRequestDto){
         Event event = eventMapper.toEntity(eventRequestDto);
@@ -53,7 +54,6 @@ public class EventServiceImpl implements EventService {
             }
         }
     }
-
 
     @Override
     public ResponseEntity<?> invite(Long eventId) {
@@ -106,7 +106,7 @@ public class EventServiceImpl implements EventService {
          *  to a team until we reach the team size. We repeat this process
          *  for all the registrations until we have formed all the teams.
          *  Finally, we print out the teams and their registrations.
-        * */
+         * */
 
         sortRegistsrations(allRegistrations);
 
