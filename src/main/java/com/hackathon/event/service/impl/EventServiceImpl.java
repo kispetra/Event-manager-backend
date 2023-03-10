@@ -2,10 +2,19 @@ package com.hackathon.event.service.impl;
 
 import com.hackathon.event.dto.EventRequestDto;
 import com.hackathon.event.dto.ParticipantListResponseDto;
+import com.hackathon.event.dto.TeamResponseDto;
+import com.hackathon.event.dto.TeamUpResponseDto;
 import com.hackathon.event.mapper.EventMapper;
 import com.hackathon.event.model.*;
 import com.hackathon.event.repository.*;
 import com.hackathon.event.service.EmailService;
+import com.hackathon.event.model.Event;
+import com.hackathon.event.model.Mentor;
+import com.hackathon.event.model.Registration;
+import com.hackathon.event.model.Team;
+import com.hackathon.event.repository.EventRepository;
+import com.hackathon.event.repository.MentorRepository;
+import com.hackathon.event.repository.TeamRepository;
 import com.hackathon.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -72,5 +81,54 @@ public class EventServiceImpl implements EventService {
         participantListResponseDto.setParticipants(participants);
 
         return ResponseEntity.ok(participantListResponseDto);
+    }
+
+
+    @Override
+    public TeamUpResponseDto teamUp(Long eventId) {
+        TeamUpResponseDto response = new TeamUpResponseDto();
+
+        Event event = eventRepository.findById(eventId).orElseThrow(
+                () -> new EntityNotFoundException("Event not found")
+        );
+        List<Registration> allRegistrations = event.getRegistrations();
+        List<Team> teams = event.getTeams();
+        Integer numberOfTeams = event.getTeams().size();
+
+        sortRegistsrations(allRegistrations);
+
+        for(Integer i = 0; i < allRegistrations.size(); i++){
+            if(allRegistrations.get(i).getParticipation()) {
+                Integer teamIndex = i % numberOfTeams;
+                Registration registration = allRegistrations.get(i);
+                teams.get(teamIndex).getMembers().add(registration.getParticipant());
+                registration.getParticipant().setTeam(teams.get(teamIndex));
+            }
+        }
+
+        List<TeamResponseDto> teamResponses = new ArrayList<>();
+
+        for(Team team : teams){
+            List<String> teamMembers = new ArrayList<>();
+            TeamResponseDto teamResponse = new TeamResponseDto();
+
+            for(Participant participant : team.getMembers()){
+                participantRepository.save(participant);
+                if(!teamMembers.contains(participant.getEmail())){
+                    teamMembers.add(participant.getEmail());
+                }
+            }
+            teamResponse.setName(team.getName());
+            teamResponse.setMembers(teamMembers);
+            teamResponses.add(teamResponse);
+        }
+
+        response.setTeams(teamResponses);
+
+        return response;
+    }
+
+    public void sortRegistsrations(List<Registration> registrations){
+        registrations.sort(Comparator.comparing(Registration::getScore));
     }
 }

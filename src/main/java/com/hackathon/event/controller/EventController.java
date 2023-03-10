@@ -1,10 +1,14 @@
 package com.hackathon.event.controller;
 
 import com.hackathon.event.dto.EventRequestDto;
+import com.hackathon.event.dto.TeamResponseDto;
+import com.hackathon.event.dto.TeamUpResponseDto;
 import com.hackathon.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,5 +23,10 @@ public class EventController {
     @PutMapping("/event/{eventId}/invite")
     public ResponseEntity<?> invite(@PathVariable Long eventId){
         return eventService.invite(eventId);
+    }
+
+    @PutMapping("/event/{eventId}/team-up")
+    public TeamUpResponseDto teamUp(@PathVariable Long eventId){
+        return eventService.teamUp(eventId);
     }
 }

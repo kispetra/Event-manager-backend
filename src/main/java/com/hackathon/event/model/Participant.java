@@ -2,12 +2,10 @@ package com.hackathon.event.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name="participants")
@@ -27,6 +25,11 @@ public class Participant {
     @JoinColumn(name="registration_id")
     @JsonIgnore
     private Registration registration;
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     @OneToMany(mappedBy = "participant")
     @JsonManagedReference

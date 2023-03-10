@@ -31,5 +31,7 @@ public class Team {
     @OneToMany(mappedBy="team")
     private List<Mentor> mentors;
 
-
+    @OneToMany(mappedBy = "team")
+    @JsonManagedReference
+    private List<Participant> members;
 }
