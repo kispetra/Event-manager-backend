@@ -58,7 +58,7 @@ public class EventServiceImpl implements EventService {
             participant.setRegistration(registration);
             participantRepository.save(participant);
 
-            participants.add(participant);
+           participants.add(participant);
 
             String emailSubject = "Invitation to event";
             String emailText = "" +
