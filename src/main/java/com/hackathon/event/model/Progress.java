@@ -20,6 +20,7 @@ public class Progress {
     @Column(name="progress_id")
     private Long id;
 
+    @Column
     private Integer week;
 
     @JsonManagedReference

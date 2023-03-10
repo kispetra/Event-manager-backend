@@ -8,7 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name="flowDetail")
+@Table(name="flow")
 @Getter
 @Setter
 public class Flow {
