@@ -98,12 +98,12 @@ public class EventServiceImpl implements EventService {
         sortRegistsrations(allRegistrations);
 
         for(Integer i = 0; i < allRegistrations.size(); i++){
-            Integer teamIndex = i % numberOfTeams;
-            Registration registration = allRegistrations.get(i);
-            teams.get(teamIndex).getMembers().add(registration.getParticipant());
-
-            // doesnt work without this for some reason
-            System.out.println(teams.get(i % numberOfTeams).getMembers().size());
+            if(allRegistrations.get(i).getParticipation()) {
+                Integer teamIndex = i % numberOfTeams;
+                Registration registration = allRegistrations.get(i);
+                teams.get(teamIndex).getMembers().add(registration.getParticipant());
+                registration.getParticipant().setTeam(teams.get(teamIndex));
+            }
         }
 
         List<TeamResponseDto> teamResponses = new ArrayList<>();
@@ -113,9 +113,10 @@ public class EventServiceImpl implements EventService {
             TeamResponseDto teamResponse = new TeamResponseDto();
 
             for(Participant participant : team.getMembers()){
-                participant.setTeam(team);
                 participantRepository.save(participant);
-                teamMembers.add(participant.getEmail());
+                if(!teamMembers.contains(participant.getEmail())){
+                    teamMembers.add(participant.getEmail());
+                }
             }
             teamResponse.setName(team.getName());
             teamResponse.setMembers(teamMembers);
