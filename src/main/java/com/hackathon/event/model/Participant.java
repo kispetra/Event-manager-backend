@@ -26,6 +26,9 @@ public class Participant {
     @JsonIgnore
     private Registration registration;
 
-
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "team_id")
+    private Team team;
 
 }
