@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProgressFlowRequestDto {
+public class FlowRequestDto {
     private String status;
     private String comment;
 
