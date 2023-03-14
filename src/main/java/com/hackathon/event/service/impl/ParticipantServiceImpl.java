@@ -1,15 +1,14 @@
 package com.hackathon.event.service.impl;
 
-import com.hackathon.event.dto.FlowRequestDto;
+import com.hackathon.event.dto.*;
+import com.hackathon.event.mapper.ParticipantMapper;
 import com.hackathon.event.model.*;
 import com.hackathon.event.model.enumeration.StatusType;
-import com.hackathon.event.repository.EventRepository;
-import com.hackathon.event.repository.FlowRepository;
-import com.hackathon.event.repository.ParticipantRepository;
-import com.hackathon.event.repository.ProgressRepository;
+import com.hackathon.event.repository.*;
 import com.hackathon.event.service.ParticipantService;
-import com.zaxxer.hikari.util.FastList;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -23,7 +22,10 @@ public class ParticipantServiceImpl implements ParticipantService {
     private final ParticipantRepository participantRepository;
     private final ProgressRepository progressRepository;
     private final FlowRepository flowRepository;
+    private final ParticipantMapper participantMapper;
+    private final TeamRepository teamRepository;
 
+    @Override
     public void saveProgress(Long eventId,  Long participantId,
                       Integer week_no, FlowRequestDto flowRequestDto){
         Event event = eventRepository.findById(eventId).orElseThrow
@@ -69,5 +71,39 @@ public class ParticipantServiceImpl implements ParticipantService {
         progress.setFlow(new ArrayList<>());
 
         return progress;
+    }
+
+    @Override
+    public Page<ParticipantResponseDto> getAllParticipants(Long eventId, Pageable pageable){
+        Page<Participant> allParticipantsByEventId = participantRepository.getAllParticipantsByEventId(eventId, pageable);
+        return participantRepository.getAllParticipantsByEventId(eventId, pageable).map(participantMapper::toDto);
+    }
+    public AllTeamsResponseDto getTeams(Long eventId){
+        Event event=eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
+
+        AllTeamsResponseDto allTeamsResponseDto=new AllTeamsResponseDto();
+        List<Team> teams=teamRepository.findAll();
+
+        List<TeamsResponseDto> teamsToSave= new ArrayList<>();
+        TeamsResponseDto teamsResponseDto = new TeamsResponseDto();
+        MentorResponseDto mentorResponseDto = new MentorResponseDto();
+        List<MentorResponseDto> mentorsList = new ArrayList<>();
+        List<ParticipantResponseDto> participants= new ArrayList<>();
+
+        for(Team team: teams){
+            teamsResponseDto.setName(team.getName());
+            for(Mentor mentor: team.getMentors()){
+                mentorResponseDto.setEmail(mentor.getEmail());
+                mentorsList.add(mentorResponseDto);
+            }
+            teamsResponseDto.setMentors(mentorsList);
+            for(Participant participant: team.getMembers()){
+               participants.add(participantMapper.toDto(participant));
+            }
+            teamsResponseDto.setMembers(participants);
+        }
+        allTeamsResponseDto.setTeams(teamsToSave);
+
+        return  allTeamsResponseDto;
     }
 }

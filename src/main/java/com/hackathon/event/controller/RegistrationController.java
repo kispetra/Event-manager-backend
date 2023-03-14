@@ -19,8 +19,8 @@ public class RegistrationController {
     private final SkillRepository skillRepository;
 
     @PostMapping("/event/{eventId}/registrations")
-    public void save(@PathVariable Long eventId, @RequestBody RegistrationRequestDto registrationRequestDto){
-        registrationService.save(eventId,registrationRequestDto);
+    public ResponseEntity<String> save(@PathVariable Long eventId, @RequestBody RegistrationRequestDto registrationRequestDto){
+         return registrationService.save(eventId,registrationRequestDto);
     }
 
     @DeleteMapping("/event/{eventId}/registrations/{registrationId}")

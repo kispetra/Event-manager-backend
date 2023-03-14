@@ -16,8 +16,8 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping("/event")
-    public void save(@RequestBody EventRequestDto eventRequestDto){
-        eventService.save(eventRequestDto);
+    public ResponseEntity<String> save(@RequestBody EventRequestDto eventRequestDto){
+        return eventService.save(eventRequestDto);
     }
 
     @PutMapping("/event/{eventId}/invite")

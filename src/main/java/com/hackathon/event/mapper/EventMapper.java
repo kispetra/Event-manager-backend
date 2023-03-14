@@ -23,10 +23,11 @@ public class EventMapper {
 
         List<Team> teams = new ArrayList<>();
 
-        for(TeamRequestDto teamRequestDto: eventRequestDto.getTeams()) {
+        for (TeamRequestDto teamRequestDto : eventRequestDto.getTeams()) {
             Team team = teamMapper.toEntity(teamRequestDto);
             teams.add(team);
         }
+
         event.setTeams(teams);
         event.setRegistrationsNotBefore(eventRequestDto.getRegistrationsNotBefore());
         event.setRegistrationsNotAfter(eventRequestDto.getRegistrationsNotAfter());

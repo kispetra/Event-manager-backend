@@ -15,8 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
+import java.net.URI;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +32,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 
     @Override
-    public void save(Long eventId, RegistrationRequestDto registrationRequestDto) {
+    public ResponseEntity<String> save(Long eventId, RegistrationRequestDto registrationRequestDto) {
         ScoringEngine scoringEngine = new ScoringEngine();
         Integer score = scoringEngine.CalculateScore(registrationRequestDto);
 
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException());
         Registration registration = registrationMapper.toEntity(registrationRequestDto, event);
+        URI locationUri= ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/event/{eventId}/registrations").buildAndExpand(event.getEventId()).toUri();
 
         Name name = registration.getPersonal().getName();
         name.setPersonal(registration.getPersonal());
@@ -70,7 +74,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         //      emailService.send(participant.getEmail(), emailSubject, emailText);
         System.out.println("Poslan mail" +" " + registration.getPersonal().getName().getFirstName() );
 
-        //TODO: return response entity
+        return ResponseEntity.created(locationUri).body("created");
     }
 
     @Override
