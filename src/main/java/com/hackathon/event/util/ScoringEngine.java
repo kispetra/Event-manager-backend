@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +31,11 @@ public class ScoringEngine {
         Integer secondarySkillsPoints = calculateSecondarySkillsPoints(registrationRequest.getExperience().getSkills());
         Integer otherSkillsPoints = calculateOtherSkillsPoints(registrationRequest.getExperience().getSkills());
         Integer repositoryPoints = registrationRequest.getExperience().getRepositoryUrl().isBlank() ? 0 : repositoryMultiplier;
-        Integer languageAndSizeScore = calculateRepoLanguageAndSizeScore(registrationRequest.getExperience().getRepositoryUrl());
-        Integer activityScore = calculateGithubActivityScore(registrationRequest.getExperience().getRepositoryUrl());
+        Integer languageAndSizeScore = 0, activityScore = 0 ;
+        if(registrationRequest.getExperience().getRepositoryUrl().substring(8,13)=="github") {
+             languageAndSizeScore = calculateRepoLanguageAndSizeScore(registrationRequest.getExperience().getRepositoryUrl());
+             activityScore = calculateGithubActivityScore(registrationRequest.getExperience().getRepositoryUrl());
+        }
         return yearsOfEducationPoints + yearsOfExperiencePoints + primarySkillsPoints +
                 secondarySkillsPoints + otherSkillsPoints + repositoryPoints +
                 languageAndSizeScore + activityScore;
