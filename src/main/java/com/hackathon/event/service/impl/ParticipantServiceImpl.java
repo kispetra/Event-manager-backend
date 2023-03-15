@@ -9,6 +9,7 @@ import com.hackathon.event.service.ParticipantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -26,12 +27,19 @@ public class ParticipantServiceImpl implements ParticipantService {
     private final TeamRepository teamRepository;
 
     @Override
-    public void saveProgress(Long eventId,  Long participantId,
-                      Integer week_no, FlowRequestDto flowRequestDto){
+    public ResponseEntity<String> saveProgress(Long eventId, Long participantId,
+                                       Integer week_no, FlowRequestDto flowRequestDto){
         Event event = eventRepository.findById(eventId).orElseThrow
                 (() -> new EntityNotFoundException("Event not found"));
         Participant participant = participantRepository.findById(participantId).orElseThrow
                 (() -> new EntityNotFoundException("Registration not found"));
+
+        if(flowRequestDto.getComment().isEmpty() || flowRequestDto.getStatus().isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        if(week_no>event.getWeeks()){
+            return ResponseEntity.status(405).body("Week number is out of bounds.");
+        }
 
         List<Progress> progresses = participant.getProgress();
 
@@ -57,6 +65,8 @@ public class ParticipantServiceImpl implements ParticipantService {
         participantRepository.save(participant);
         progressRepository.save(progress);
         flowRepository.save(flow);
+
+        return ResponseEntity.ok().body("Saved.");
     }
 
     public Progress getProgressByWeekNumber(Integer week_no) {

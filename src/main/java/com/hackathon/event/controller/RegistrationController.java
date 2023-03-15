@@ -24,8 +24,8 @@ public class RegistrationController {
     }
 
     @DeleteMapping("/event/{eventId}/registrations/{registrationId}")
-    public void deleteById(@PathVariable Long eventId,@PathVariable Long registrationId){
-        registrationService.deleteById(eventId,registrationId);
+    public ResponseEntity<String> deleteById(@PathVariable Long eventId,@PathVariable Long registrationId){
+        return registrationService.deleteById(eventId,registrationId);
     }
 
     @PutMapping("/event/{eventId}/registrations/{registrationId}/score")
@@ -42,8 +42,7 @@ public class RegistrationController {
         return registrationService.getAllRegistrations(eventId, pageable);
     }
     @PatchMapping("/event/{eventId}/registrations/{registrationId}")
-    public void patchById(@PathVariable Long eventId, @PathVariable Long registrationId, @RequestBody ConfirmationRequestDto confirmationRequestDto){
-        registrationService.patchById(eventId, registrationId, confirmationRequestDto);
-
+    public ResponseEntity<String> patchById(@PathVariable Long eventId, @PathVariable Long registrationId, @RequestBody ConfirmationRequestDto confirmationRequestDto){
+        return registrationService.patchById(eventId, registrationId, confirmationRequestDto);
     }
 }

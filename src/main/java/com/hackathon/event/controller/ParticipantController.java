@@ -9,6 +9,7 @@ import com.hackathon.event.service.ParticipantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,9 +18,9 @@ public class ParticipantController {
     private final ParticipantService participantService;
     private final ProgressRepository progressRepository;
     @PutMapping("/event/{eventId}/participants/{participantId}/week/{week_no}")
-    public void saveProgress(@PathVariable Long eventId, @PathVariable Long participantId,
-                             @PathVariable Integer week_no, @RequestBody FlowRequestDto flowRequestDto){
-           participantService.saveProgress(eventId,participantId,week_no, flowRequestDto);
+    public ResponseEntity<String> saveProgress(@PathVariable Long eventId, @PathVariable Long participantId,
+                                       @PathVariable Integer week_no, @RequestBody FlowRequestDto flowRequestDto){
+           return participantService.saveProgress(eventId,participantId,week_no, flowRequestDto);
     }
 
     @GetMapping("/event/{eventId}/participants")

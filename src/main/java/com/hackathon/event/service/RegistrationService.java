@@ -11,11 +11,11 @@ import org.springframework.http.ResponseEntity;
 public interface RegistrationService {
 
     ResponseEntity<String> save(Long eventId, RegistrationRequestDto registrationRequestDto);
-    void deleteById(Long eventId, Long registrationId);
+    ResponseEntity<String> deleteById(Long eventId, Long registrationId);
 
     ResponseEntity<String> score(Long eventId, Long registrationId, CommentRequestDto scoreRequestDto);
     RegistrationResponseDto fetchById(Long eventId, Long registrationId);
 
     Page<RegistrationResponseDto> getAllRegistrations(Long eventId, Pageable pageable);
-    void patchById(Long eventId, Long registrationId, ConfirmationRequestDto confirmationRequestDto);
+    ResponseEntity<String> patchById(Long eventId, Long registrationId, ConfirmationRequestDto confirmationRequestDto);
 }

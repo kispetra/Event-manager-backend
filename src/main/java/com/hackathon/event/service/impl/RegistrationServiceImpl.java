@@ -19,6 +19,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationMapper registrationMapper;
     private final SkillRepository skillRepository;
     private final CommentRepository commentRepository;
+    private final ParticipantRepository participantRepository;
 
 
     @Override
@@ -36,7 +40,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         ScoringEngine scoringEngine = new ScoringEngine();
         Integer score = scoringEngine.CalculateScore(registrationRequestDto);
 
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException());
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found."));
+        Date date= new Date();
+
+        if(date.before(event.getRegistrationsNotBefore()) || date.after(event.getRegistrationsNotAfter())){
+            return  ResponseEntity.status(405).body("Event is not accepting registrations.");
+        }
+
         Registration registration = registrationMapper.toEntity(registrationRequestDto, event);
         URI locationUri= ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/event/{eventId}/registrations").buildAndExpand(event.getEventId()).toUri();
@@ -75,10 +85,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         System.out.println("Poslan mail" +" " + registration.getPersonal().getName().getFirstName() );
 
         return ResponseEntity.created(locationUri).body("created");
+
     }
 
     @Override
-    public void deleteById(Long eventId, Long registrationId) {
+    public ResponseEntity<String> deleteById(Long eventId, Long registrationId) {
 
         Event event = eventRepository.findById(eventId).orElseThrow
                 (() -> new EntityNotFoundException("Event not found"));
@@ -88,11 +99,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         event.getRegistrations().remove(registration);
         registrationRepository.delete(registration);
 
+        return ResponseEntity.ok("Deleted.");
     }
 
     @Override
     public ResponseEntity<String> score(Long eventId, Long registrationId, CommentRequestDto scoreRequestDto) {
+        Event event = eventRepository.findById(eventId).orElseThrow(()-> new EntityNotFoundException("Event doesn't exist."));
         Registration registration = registrationRepository.findById(registrationId).orElseThrow(() -> new EntityNotFoundException("Registration doesn't exist"));
+        if(scoreRequestDto.getScore().isEmpty() || scoreRequestDto.getComment().isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
         if (scoreRequestDto.getScore().charAt(0) == '+') {
             String valueText = scoreRequestDto.getScore().substring(1);
             Integer updatedScore = registration.getScore();
@@ -134,12 +150,26 @@ public class RegistrationServiceImpl implements RegistrationService {
         return registrationRepository.getAllRegistrationsByEventId(eventId, pageable).map(registrationMapper::toDto);
     }
     @Override
-    public void patchById(Long eventId, Long registrationId, ConfirmationRequestDto confirmationRequestDto){
+    public ResponseEntity<String> patchById(Long eventId, Long registrationId, ConfirmationRequestDto confirmationRequestDto){
         Event event = eventRepository.findById(eventId).orElseThrow
                 (() -> new EntityNotFoundException("Event not found"));
         Registration registration = registrationRepository.findById(registrationId).orElseThrow
                 (() -> new EntityNotFoundException("Registration not found"));
 
+        if(confirmationRequestDto.getKickoff().equals(null)|| confirmationRequestDto.getParticipation().equals(null)
+            || confirmationRequestDto.getTshirt().isEmpty() || confirmationRequestDto.getGitlab().isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        Date date= new Date();
+        if(date.after(event.getConfirmationNotAfter())){
+            return ResponseEntity.status(405).body("Method not allowed.");
+        }
+        if(registration.getParticipation().booleanValue()){
+            return ResponseEntity.status(405).body("Already accepted.");
+        }
+        if(participantRepository.existsById(registrationId)){
+            return ResponseEntity.status(405).body("Not invited.");
+        }
         registration.setParticipation(confirmationRequestDto.getParticipation());
         registration.setKickoff(confirmationRequestDto.getKickoff());
         registration.setTshirt(confirmationRequestDto.getTshirt());
@@ -156,6 +186,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         //      emailService.send(participant.getEmail(), emailSubject, emailText);
         System.out.println("Potvrdio" +" " + registration.getPersonal().getName().getFirstName() );
 
+        return ResponseEntity.ok("Done.");
     }
 
 }
