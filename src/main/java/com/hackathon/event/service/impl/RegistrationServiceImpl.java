@@ -164,7 +164,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(date.after(event.getConfirmationNotAfter())){
             return ResponseEntity.status(405).body("Method not allowed.");
         }
-        if(registration.getParticipation().booleanValue()){
+        if( registration.getParticipation()!=null && registration.getParticipation()){
             return ResponseEntity.status(405).body("Already accepted.");
         }
         if(participantRepository.existsById(registrationId)){

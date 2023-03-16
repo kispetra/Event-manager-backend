@@ -44,7 +44,7 @@ public class ParticipantMapper {
         experienceResponseDto.setRepositoryUrl(participant.getRegistration().getExperience().getRepositoryUrl());
         experienceResponseDto.setSummary(participant.getRegistration().getExperience().getSummary());
         participantResponseDto.setExperience(experienceResponseDto);
-        participantResponseDto.setScore(participantResponseDto.getScore());
+        participantResponseDto.setScore(participant.getRegistration().getScore());
 
         List<CommentResponseDto> comments= new ArrayList<>();
         for(Comment comment: participant.getRegistration().getComment()){
@@ -52,6 +52,7 @@ public class ParticipantMapper {
             comments.add(commentResponseDto);
         }
         participantResponseDto.setComments(comments);
+        participantResponseDto.setParticipation(participant.getRegistration().getParticipation());
         participantResponseDto.setKickoff(participant.getRegistration().getKickoff());
         participantResponseDto.setTshirt(participant.getRegistration().getTshirt());
         participantResponseDto.setGitlab(participant.getRegistration().getGitlab());

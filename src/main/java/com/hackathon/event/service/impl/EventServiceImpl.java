@@ -45,7 +45,7 @@ public class EventServiceImpl implements EventService {
 
         Event event = eventMapper.toEntity(eventRequestDto);
         URI locationUri= ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/event/{eventId}").buildAndExpand(event.getEventId()).toUri();
+                .fromCurrentRequest().path("/{eventId}").buildAndExpand(event.getEventId()).toUri();
         List<Event> events = eventRepository.findAll();
         for(Event e: events) {
             if (e.getName().equals(event)) {

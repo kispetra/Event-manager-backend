@@ -92,17 +92,19 @@ public class ParticipantServiceImpl implements ParticipantService {
         Event event=eventRepository.findById(eventId).orElseThrow(() -> new EntityNotFoundException("Event not found"));
 
         AllTeamsResponseDto allTeamsResponseDto=new AllTeamsResponseDto();
-        List<Team> teams=teamRepository.findAll();
+        List<Team> teams=event.getTeams();
 
         List<TeamsResponseDto> teamsToSave= new ArrayList<>();
-        TeamsResponseDto teamsResponseDto = new TeamsResponseDto();
-        MentorResponseDto mentorResponseDto = new MentorResponseDto();
-        List<MentorResponseDto> mentorsList = new ArrayList<>();
-        List<ParticipantResponseDto> participants= new ArrayList<>();
 
         for(Team team: teams){
+            TeamsResponseDto teamsResponseDto = new TeamsResponseDto();
+
             teamsResponseDto.setName(team.getName());
+            List<MentorResponseDto> mentorsList = new ArrayList<>();
+            List<ParticipantResponseDto> participants= new ArrayList<>();
+
             for(Mentor mentor: team.getMentors()){
+                MentorResponseDto mentorResponseDto = new MentorResponseDto();
                 mentorResponseDto.setEmail(mentor.getEmail());
                 mentorsList.add(mentorResponseDto);
             }
@@ -111,6 +113,7 @@ public class ParticipantServiceImpl implements ParticipantService {
                participants.add(participantMapper.toDto(participant));
             }
             teamsResponseDto.setMembers(participants);
+            teamsToSave.add(teamsResponseDto);
         }
         allTeamsResponseDto.setTeams(teamsToSave);
 
