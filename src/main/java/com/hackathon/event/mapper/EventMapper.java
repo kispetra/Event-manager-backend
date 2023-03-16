@@ -33,6 +33,7 @@ public class EventMapper {
         event.setConfirmationNotAfter(eventRequestDto.getConfirmationNotAfter());
         event.setStartDate(eventRequestDto.getStartDate());
         event.setWeeks(eventRequestDto.getWeeks());
+        event.setInvitesSent(false);
 
         return event;
     }

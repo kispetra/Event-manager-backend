@@ -34,6 +34,8 @@ public class Event {
     private Date startDate;
     @Column
     private int weeks;
+    @Column(name = "sent_invites")
+    private Boolean invitesSent;
     @Column
     @JsonManagedReference
     @OneToMany(mappedBy = "event")

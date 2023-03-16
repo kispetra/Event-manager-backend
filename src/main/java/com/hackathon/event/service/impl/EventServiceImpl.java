@@ -17,6 +17,7 @@ import com.hackathon.event.repository.MentorRepository;
 import com.hackathon.event.repository.TeamRepository;
 import com.hackathon.event.service.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +57,10 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventId).orElseThrow
                 (() -> new EntityNotFoundException("Event not found"));
 
+        if(event.getInvitesSent()){
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("Invites already sent");
+        }
+
         ParticipantListResponseDto participantListResponseDto = new ParticipantListResponseDto();
         List<Participant> participants = new ArrayList<>();
 
@@ -79,6 +84,8 @@ public class EventServiceImpl implements EventService {
             System.out.println("Poslan mail"+ registration.getPersonal().getEmail());
         }
         participantListResponseDto.setParticipants(participants);
+        event.setInvitesSent(true);
+        eventRepository.save(event);
 
         return ResponseEntity.ok(participantListResponseDto);
     }
