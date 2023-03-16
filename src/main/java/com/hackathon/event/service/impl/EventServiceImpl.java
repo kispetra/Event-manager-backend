@@ -57,6 +57,7 @@ public class EventServiceImpl implements EventService {
 
         Collections.sort(event.getRegistrations(), Comparator.comparing(Registration::getScore).reversed());
 
+        Integer count = 0;
         for (Registration registration: event.getRegistrations()) {
             Participant participant = new Participant();
             participant.setEmail(registration.getPersonal().getEmail());
@@ -73,6 +74,8 @@ public class EventServiceImpl implements EventService {
 
       //      emailService.send(participant.getEmail(), emailSubject, emailText);
             System.out.println("Poslan mail"+ registration.getPersonal().getEmail());
+            count++;
+            if(count>=event.getMaxParticipants())break;
         }
         participantListResponseDto.setParticipants(participants);
         event.setInvitesSent(true);
