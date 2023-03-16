@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface EventService {
 
-    void save(EventRequestDto eventRequestDto);
+    ResponseEntity<String> save(EventRequestDto eventRequestDto);
 
     ResponseEntity<?> invite(Long eventId);
 

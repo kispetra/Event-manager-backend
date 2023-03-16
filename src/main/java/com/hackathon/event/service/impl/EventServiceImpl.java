@@ -20,8 +20,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,8 +41,17 @@ public class EventServiceImpl implements EventService {
     private final ParticipantRepository participantRepository;
     private final EmailService emailService;
 
-    public void save(EventRequestDto eventRequestDto){
+    public ResponseEntity<String> save(EventRequestDto eventRequestDto){
+
         Event event = eventMapper.toEntity(eventRequestDto);
+        URI locationUri= ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{eventId}").buildAndExpand(event.getEventId()).toUri();
+        List<Event> events = eventRepository.findAll();
+        for(Event e: events) {
+            if (e.getName().equals(event)) {
+                return ResponseEntity.badRequest().body("An event with the same name already exists or multiple teams having the same name");
+            }
+        }
         eventRepository.save(event);
         for (Team team : event.getTeams()){
             team.setEvent(event);
@@ -50,6 +61,7 @@ public class EventServiceImpl implements EventService {
                 mentorRepository.save(mentor);
             }
         }
+        return ResponseEntity.created(locationUri).body("created");
     }
 
     @Override
@@ -102,7 +114,7 @@ public class EventServiceImpl implements EventService {
         List<Team> teams = event.getTeams();
         Integer numberOfTeams = event.getTeams().size();
 
-        sortRegistsrations(allRegistrations);
+        sortRegistrations(allRegistrations);
 
         for(Integer i = 0; i < allRegistrations.size(); i++){
             if(allRegistrations.get(i).getParticipation()) {
@@ -135,7 +147,7 @@ public class EventServiceImpl implements EventService {
         return response;
     }
 
-    public void sortRegistsrations(List<Registration> registrations){
+    public void sortRegistrations(List<Registration> registrations){
         registrations.sort(Comparator.comparing(Registration::getScore));
     }
 }

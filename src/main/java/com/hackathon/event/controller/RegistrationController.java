@@ -19,13 +19,13 @@ public class RegistrationController {
     private final SkillRepository skillRepository;
 
     @PostMapping("/event/{eventId}/registrations")
-    public void save(@PathVariable Long eventId, @RequestBody RegistrationRequestDto registrationRequestDto){
-        registrationService.save(eventId,registrationRequestDto);
+    public ResponseEntity<String> save(@PathVariable Long eventId, @RequestBody RegistrationRequestDto registrationRequestDto){
+         return registrationService.save(eventId,registrationRequestDto);
     }
 
     @DeleteMapping("/event/{eventId}/registrations/{registrationId}")
-    public void deleteById(@PathVariable Long eventId,@PathVariable Long registrationId){
-        registrationService.deleteById(eventId,registrationId);
+    public ResponseEntity<String> deleteById(@PathVariable Long eventId,@PathVariable Long registrationId){
+        return registrationService.deleteById(eventId,registrationId);
     }
 
     @PutMapping("/event/{eventId}/registrations/{registrationId}/score")
@@ -42,8 +42,7 @@ public class RegistrationController {
         return registrationService.getAllRegistrations(eventId, pageable);
     }
     @PatchMapping("/event/{eventId}/registrations/{registrationId}")
-    public void patchById(@PathVariable Long eventId, @PathVariable Long registrationId, @RequestBody ConfirmationRequestDto confirmationRequestDto){
-        registrationService.patchById(eventId, registrationId, confirmationRequestDto);
-
+    public ResponseEntity<String> patchById(@PathVariable Long eventId, @PathVariable Long registrationId, @RequestBody ConfirmationRequestDto confirmationRequestDto){
+        return registrationService.patchById(eventId, registrationId, confirmationRequestDto);
     }
 }
