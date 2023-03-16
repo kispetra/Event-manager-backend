@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +31,14 @@ public class ScoringEngine {
         Integer secondarySkillsPoints = calculateSecondarySkillsPoints(registrationRequest.getExperience().getSkills());
         Integer otherSkillsPoints = calculateOtherSkillsPoints(registrationRequest.getExperience().getSkills());
         Integer repositoryPoints = registrationRequest.getExperience().getRepositoryUrl().isBlank() ? 0 : repositoryMultiplier;
-        Integer numberOfRepos = calculateRepoNumber(registrationRequest.getExperience().getRepositoryUrl());
-        Integer languageScore = calculateRepoLanguageScore(registrationRequest.getExperience().getRepositoryUrl());
-        Integer activityScore = calculateGithubActivityScore(registrationRequest.getExperience().getRepositoryUrl());
+        Integer languageAndSizeScore = 0, activityScore = 0 ;
+        if(registrationRequest.getExperience().getRepositoryUrl().substring(8,13)=="github") {
+             languageAndSizeScore = calculateRepoLanguageAndSizeScore(registrationRequest.getExperience().getRepositoryUrl());
+             activityScore = calculateGithubActivityScore(registrationRequest.getExperience().getRepositoryUrl());
+        }
         return yearsOfEducationPoints + yearsOfExperiencePoints + primarySkillsPoints +
-                secondarySkillsPoints + otherSkillsPoints + repositoryPoints + numberOfRepos +
-                languageScore + activityScore;
+                secondarySkillsPoints + otherSkillsPoints + repositoryPoints +
+                languageAndSizeScore + activityScore;
     }
 
     private Integer calculatePrimarySkillsPoints(List<String> skills) {
@@ -95,21 +96,9 @@ public class ScoringEngine {
         return false;
     }
 
-    private Integer calculateRepoNumber(String repositoryUrl) {
-        WebClient webClient = WebClient.create();
-        String username = repositoryUrl.substring(19);
-        String apiUrl = "https://api.github.com/users/" + username;
-        Integer repositoryCount = webClient.get()
-                .uri(apiUrl)
-                .retrieve()
-                .bodyToMono(GithubRepoNumberResponseDto.class)
-                .block()
-                .getNumberOfRepos();
 
-        return repositoryCount;
-    }
 
-    private Integer calculateRepoLanguageScore(String repositoryUrl) {
+    private Integer calculateRepoLanguageAndSizeScore(String repositoryUrl) {
         WebClient webClient = WebClient.create();
         String username = repositoryUrl.substring(19);
         String apiUrl = "https://api.github.com/users/" + username + "/repos";
@@ -129,7 +118,7 @@ public class ScoringEngine {
                 languageScore++;
             }
         }
-        return languageScore;
+        return languageScore + body.size();
     }
 
     private Integer calculateGithubActivityScore(String repositoryUrl){
