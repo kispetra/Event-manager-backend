@@ -14,6 +14,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +44,7 @@ public class EmailServiceImpl implements EmailService {
         //List<Event> events = eventRepository.findAllWhereConfirmationDateExpiredAndInvitesSentFalse();
         List<Event> events = eventRepository.findAll();
         for(Event event : events) {
-
+            Collections.sort(event.getRegistrations(), Comparator.comparing(Registration::getScore).reversed());
             if(!event.getInvitesSent() && event.getConfirmationNotAfter().before(new Date())) {
                 Integer count = 0;
                 for(Registration registration : event.getRegistrations()) {
