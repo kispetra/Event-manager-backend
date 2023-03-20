@@ -12,8 +12,6 @@ public class EventApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EventApplication.class, args);
-		UUID test = UUID.randomUUID();
-		System.out.println(test.toString());
 	}
 
 }
