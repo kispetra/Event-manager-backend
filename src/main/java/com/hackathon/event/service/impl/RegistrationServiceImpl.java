@@ -22,6 +22,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +68,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         experience.setRegistration(registration);
         registration.setExperience(experience);
         registration.setScore(score);
-
+        registration.setRegistrationUUID(UUID.randomUUID());
         registrationRepository.save(registration);
 
         for (Skill skill : registration.getExperience().getSkills()) {
