@@ -38,6 +38,8 @@ public class Event {
     @Column(name = "sent_invites")
     private Boolean invitesSent;
     @Column
+    private Boolean divided;
+    @Column
     @JsonManagedReference
     @OneToMany(mappedBy = "event")
     private List<Registration> registrations;

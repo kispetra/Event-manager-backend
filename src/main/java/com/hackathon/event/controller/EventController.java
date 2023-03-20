@@ -26,7 +26,7 @@ public class EventController {
     }
 
     @PutMapping("/event/{eventId}/team-up")
-    public TeamUpResponseDto teamUp(@PathVariable Long eventId){
+    public ResponseEntity<?> teamUp(@PathVariable Long eventId){
         return eventService.teamUp(eventId);
     }
 }

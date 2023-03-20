@@ -47,9 +47,17 @@ public class EventServiceImpl implements EventService {
         URI locationUri= ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{eventId}").buildAndExpand(event.getEventId()).toUri();
         List<Event> events = eventRepository.findAll();
+
         for(Event e: events) {
-            if (e.getName().equals(event)) {
-                return ResponseEntity.badRequest().body("An event with the same name already exists or multiple teams having the same name");
+            if (e.getName().equals(event.getName())) {
+                return ResponseEntity.badRequest().body("An event with the same name already exists.");
+            }
+            for(Team team: e.getTeams()){
+                for(Team team1: event.getTeams()){
+                    if(team.getName().equals(team1.getName())) {
+                        return ResponseEntity.badRequest().body("Multiple teams having the same name");
+                    }
+                }
             }
         }
         eventRepository.save(event);
@@ -61,7 +69,7 @@ public class EventServiceImpl implements EventService {
                 mentorRepository.save(mentor);
             }
         }
-        return ResponseEntity.created(locationUri).body("created");
+        return ResponseEntity.created(locationUri).build();
     }
 
     @Override
@@ -107,12 +115,15 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public TeamUpResponseDto teamUp(Long eventId) {
+    public ResponseEntity<?> teamUp(Long eventId) {
         TeamUpResponseDto response = new TeamUpResponseDto();
 
         Event event = eventRepository.findById(eventId).orElseThrow(
                 () -> new EntityNotFoundException("Event not found")
         );
+        if(event.getDivided()){
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("Participants have already been divided into teams.");
+        }
         List<Registration> allRegistrations = event.getRegistrations();
         List<Team> teams = event.getTeams();
         Integer numberOfTeams = event.getTeams().size();
@@ -146,8 +157,9 @@ public class EventServiceImpl implements EventService {
         }
 
         response.setTeams(teamResponses);
+        event.setDivided(true);
 
-        return response;
+        return ResponseEntity.ok().body(response);
     }
 
     public void sortRegistrations(List<Registration> registrations){

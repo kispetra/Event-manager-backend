@@ -13,6 +13,6 @@ public interface EventService {
 
     ResponseEntity<?> invite(Long eventId);
 
-    TeamUpResponseDto teamUp(Long eventId);
+    ResponseEntity<?> teamUp(Long eventId);
 
 }
