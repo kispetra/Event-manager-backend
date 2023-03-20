@@ -13,12 +13,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Registration {
-    //@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "registration_sequence")
-    @SequenceGenerator(name="registration_sequence", allocationSize = 1)
-    @Column(name="registration_id")
-    private Long registrationId;
-
     @Id
     @Column(name = "registration_uuid")
     private UUID registrationUUID;
