@@ -66,16 +66,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         Experience experience = registration.getExperience();
         experience.setRegistration(registration);
+
+        for (Skill skill : registration.getExperience().getSkills()) {
+            skill.setExperience(experience);
+        }
+
         registration.setExperience(experience);
         registration.setScore(score);
         registration.setRegistrationUUID(UUID.randomUUID());
 
         registrationRepository.save(registration);
-
-        for (Skill skill : registration.getExperience().getSkills()) {
-            skill.setExperience(experience);
-            skillRepository.save(skill);
-        }
 
         String emailSubject = "Registration filled";
         String emailText = "" +
