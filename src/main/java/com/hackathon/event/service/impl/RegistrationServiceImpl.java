@@ -6,7 +6,6 @@ import com.hackathon.event.dto.RegistrationResponseDto;
 import com.hackathon.event.dto.CommentRequestDto;
 import com.hackathon.event.mapper.RegistrationMapper;
 import com.hackathon.event.model.*;
-import com.hackathon.event.model.enumeration.SkillType;
 import com.hackathon.event.repository.*;
 import com.hackathon.event.service.RegistrationService;
 import com.hackathon.event.util.ScoringEngine;
@@ -21,7 +20,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,9 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final EventRepository eventRepository;
     private final RegistrationMapper registrationMapper;
-    private final SkillRepository skillRepository;
     private final CommentRepository commentRepository;
-    private final ParticipantRepository participantRepository;
 
 
     @Override
@@ -169,10 +165,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if( registration.getParticipation()!=null && registration.getParticipation()){
             return ResponseEntity.status(405).body("Already accepted.");
         }
-        // TODO: fix valjd
-        if(participantRepository.existsById(registration.getParticipant().getParticipantId())){
-            return ResponseEntity.status(405).body("Not invited.");
-        }
+
         registration.setParticipation(confirmationRequestDto.getParticipation());
         registration.setKickoff(confirmationRequestDto.getKickoff());
         registration.setTshirt(confirmationRequestDto.getTshirt());
