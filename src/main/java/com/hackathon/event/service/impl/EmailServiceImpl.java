@@ -37,39 +37,39 @@ public class EmailServiceImpl implements EmailService {
     }
 
     // runs every day
-//    @Scheduled(fixedDelay = 3600000)
-//    @Transactional
-//    public void autoInvitesScheduledTask()
-//    {
-//        //List<Event> events = eventRepository.findAllWhereConfirmationDateExpiredAndInvitesSentFalse();
-//        List<Event> events = eventRepository.findAll();
-//        for(Event event : events) {
-//            Collections.sort(event.getRegistrations(), Comparator.comparing(Registration::getScore).reversed());
-//            if(!event.getInvitesSent() && event.getConfirmationNotAfter().before(new Date())) {
-//                Integer count = 0;
-//                for(Registration registration : event.getRegistrations()) {
-//                    Participant participant = new Participant();
-//                    participant.setEmail(registration.getPersonal().getEmail());
-//                    participant.setRegistration(registration);
-//                    participantRepository.save(participant);
-//
-//                    String emailSubject = "Invitation to event";
-//                    String emailText = "" +
-//                            "Dear " + registration.getPersonal().getEmail() + ", \n\n" +
-//                            "Invited to event" +
-//                            "\n\n Lp, Your organiser";
-//
-//                    //      emailService.send(participant.getEmail(), emailSubject, emailText);
-//                    System.out.println("Automatski poslan invite: " + registration.getPersonal().getEmail());
-//
-//                    count++;
-//                    if (count>=event.getMaxParticipants()) {
-//                        break;
-//                    }
-//                }
-//                event.setInvitesSent(true);
-//                eventRepository.save(event);
-//            }
-//        }
-//    }
+    @Scheduled(fixedDelay = 3600000)
+    @Transactional
+    public void autoInvitesScheduledTask()
+    {
+        //List<Event> events = eventRepository.findAllWhereConfirmationDateExpiredAndInvitesSentFalse();
+        List<Event> events = eventRepository.findAll();
+        for(Event event : events) {
+            Collections.sort(event.getRegistrations(), Comparator.comparing(Registration::getScore).reversed());
+            if(!event.getInvitesSent() && event.getConfirmationNotAfter().before(new Date())) {
+                Integer count = 0;
+                for(Registration registration : event.getRegistrations()) {
+                    Participant participant = new Participant();
+                    participant.setEmail(registration.getPersonal().getEmail());
+                    participant.setRegistration(registration);
+                    participantRepository.save(participant);
+
+                    String emailSubject = "Invitation to event";
+                    String emailText = "" +
+                            "Dear " + registration.getPersonal().getEmail() + ", \n\n" +
+                            "Invited to event" +
+                            "\n\n Lp, Your organiser";
+
+                    //      emailService.send(participant.getEmail(), emailSubject, emailText);
+                    System.out.println("Automatski poslan invite: " + registration.getPersonal().getEmail());
+
+                    count++;
+                    if (count>=event.getMaxParticipants()) {
+                        break;
+                    }
+                }
+                event.setInvitesSent(true);
+                eventRepository.save(event);
+            }
+        }
+    }
 }
