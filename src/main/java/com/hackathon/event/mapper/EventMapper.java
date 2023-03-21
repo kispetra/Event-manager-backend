@@ -35,6 +35,7 @@ public class EventMapper {
         event.setStartDate(eventRequestDto.getStartDate());
         event.setWeeks(eventRequestDto.getWeeks());
         event.setInvitesSent(false);
+        event.setDivided(false);
 
         return event;
     }
