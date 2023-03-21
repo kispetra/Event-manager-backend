@@ -45,8 +45,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         Registration registration = registrationMapper.toEntity(registrationRequestDto, event);
-        URI locationUri= ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/event/{eventId}/registrations").buildAndExpand(event.getEventId()).toUri();
+
 
         Name name = registration.getPersonal().getName();
         name.setPersonal(registration.getPersonal());
@@ -72,6 +71,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         registration.setRegistrationUUID(UUID.randomUUID());
 
         registrationRepository.save(registration);
+        URI locationUri= ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/event/{eventId}/registrations").buildAndExpand(event.getEventId()).toUri();
 
         String emailSubject = "Registration filled";
         String emailText = "" +

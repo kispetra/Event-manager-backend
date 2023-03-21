@@ -44,9 +44,8 @@ public class EventServiceImpl implements EventService {
     public ResponseEntity<String> save(EventRequestDto eventRequestDto){
 
         Event event = eventMapper.toEntity(eventRequestDto);
-        URI locationUri= ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{eventId}").buildAndExpand(event.getEventId()).toUri();
         List<Event> events = eventRepository.findAll();
+        List<Team> teams= event.getTeams();
 
         for(Event e: events) {
             if (e.getName().equals(event.getName())) {
@@ -60,6 +59,7 @@ public class EventServiceImpl implements EventService {
                 }
             }
         }
+
         eventRepository.save(event);
         for (Team team : event.getTeams()){
             team.setEvent(event);
@@ -69,6 +69,12 @@ public class EventServiceImpl implements EventService {
                 mentorRepository.save(mentor);
             }
         }
+        URI locationUri= ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{eventId}")
+                .buildAndExpand(event.getEventId())
+                .toUri();
+
         return ResponseEntity.created(locationUri).build();
     }
 
