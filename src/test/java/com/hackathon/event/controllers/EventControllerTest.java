@@ -3,7 +3,10 @@ package com.hackathon.event.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hackathon.event.controller.EventController;
 import com.hackathon.event.dto.EventRequestDto;
-import com.hackathon.event.dto.TeamRequestDto;
+import com.hackathon.event.dto.ParticipantListResponseDto;
+import com.hackathon.event.dto.ParticipantResponseDto;
+import com.hackathon.event.model.Event;
+import com.hackathon.event.repository.EventRepository;
 import com.hackathon.event.service.impl.EventServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,15 +23,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.persistence.EntityNotFoundException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static jdk.internal.org.objectweb.asm.util.CheckClassAdapter.verify;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.client.ExpectedCount.times;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -45,6 +44,8 @@ public class EventControllerTest {
 
     @InjectMocks
     private EventController eventController;
+    @Autowired
+    private EventRepository eventRepository;
 
     @Test
     void testSaveEvent_returns201created() {
@@ -68,5 +69,26 @@ public class EventControllerTest {
         // assert the response
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void testInvite_returns200ok() throws Exception {
+
+        ParticipantListResponseDto participantListResponseDto = new ParticipantListResponseDto();
+        ResponseEntity response = new ResponseEntity<>(participantListResponseDto, HttpStatus.OK);
+
+        Mockito.when(eventService.invite(Mockito.anyLong()))
+                .thenReturn(response);
+
+        Event event = eventRepository.findById(30L).orElseThrow(() -> new EntityNotFoundException("Event with id 30 does not exist"));
+        event.setInvitesSent(false);
+        eventRepository.save(event);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/event/30/invite")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect((MockMvcResultMatchers.status().isOk()));
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
