@@ -37,12 +37,12 @@ public class EmailServiceImpl implements EmailService {
     }
 
     // runs every day
-    @Scheduled(fixedDelay = 3600000)
+    @Scheduled(fixedDelay = 5000)
     @Transactional
     public void autoInvitesScheduledTask()
     {
-        //List<Event> events = eventRepository.findAllWhereConfirmationDateExpiredAndInvitesSentFalse();
-        List<Event> events = eventRepository.findAll();
+        List<Event> events = eventRepository.findAllWhereConfirmationDateExpiredAndInvitesSentFalse();
+        //List<Event> events = eventRepository.findAll();
         for(Event event : events) {
             Collections.sort(event.getRegistrations(), Comparator.comparing(Registration::getScore).reversed());
             if(!event.getInvitesSent() && event.getConfirmationNotAfter().before(new Date())) {

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name="registrations")
@@ -13,10 +14,8 @@ import java.util.List;
 @Setter
 public class Registration {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "registration_sequence")
-    @SequenceGenerator(name="registration_sequence", allocationSize = 1)
-    @Column(name="registration_id")
-    private Long registrationId;
+    @Column(name = "registration_uuid")
+    private UUID registrationUUID;
 
     @ManyToOne
     @JsonBackReference

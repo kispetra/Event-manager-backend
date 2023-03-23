@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event,Long> {
 
-    @Query("SELECT e FROM Event e WHERE e.confirmationNotAfter < current_date AND e.invitesSent = false")
+    @Query("SELECT e FROM Event e WHERE e.confirmationNotAfter < CURRENT_DATE AND e.invitesSent = false")
     List<Event> findAllWhereConfirmationDateExpiredAndInvitesSentFalse();
 }

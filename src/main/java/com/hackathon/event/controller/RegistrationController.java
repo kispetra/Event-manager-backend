@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 public class RegistrationController {
@@ -20,29 +22,31 @@ public class RegistrationController {
 
     @PostMapping("/event/{eventId}/registrations")
     public ResponseEntity<String> save(@PathVariable Long eventId, @RequestBody RegistrationRequestDto registrationRequestDto){
-         return registrationService.save(eventId,registrationRequestDto);
+         return registrationService.save(eventId, registrationRequestDto);
     }
 
     @DeleteMapping("/event/{eventId}/registrations/{registrationId}")
-    public ResponseEntity<String> deleteById(@PathVariable Long eventId,@PathVariable Long registrationId){
-        return registrationService.deleteById(eventId,registrationId);
+    public ResponseEntity<String> deleteById(@PathVariable Long eventId, @PathVariable String registrationId){
+        return registrationService.deleteById(eventId, registrationId);
     }
 
     @PutMapping("/event/{eventId}/registrations/{registrationId}/score")
-    public ResponseEntity<String> score(@PathVariable Long eventId, @PathVariable Long registrationId, @RequestBody CommentRequestDto scoreRequestDto){
-        return registrationService.score(eventId,registrationId,scoreRequestDto);
+    public ResponseEntity<String> score(@PathVariable Long eventId, @PathVariable String registrationId, @RequestBody CommentRequestDto scoreRequestDto){
+        return registrationService.score(eventId, registrationId, scoreRequestDto);
     }
+
     @GetMapping("/event/{eventId}/registrations/{registrationId}")
-    public RegistrationResponseDto fetchById(@PathVariable Long eventId, @PathVariable Long registrationId){
-        return registrationService.fetchById(eventId,registrationId);
+    public RegistrationResponseDto fetchById(@PathVariable Long eventId, @PathVariable String registrationId){
+        return registrationService.fetchById(eventId, registrationId);
     }
 
     @GetMapping("/event/{eventId}/registrations")
     public Page<RegistrationResponseDto> getAllRegistrations(@PathVariable Long eventId, Pageable pageable){
         return registrationService.getAllRegistrations(eventId, pageable);
     }
+
     @PatchMapping("/event/{eventId}/registrations/{registrationId}")
-    public ResponseEntity<String> patchById(@PathVariable Long eventId, @PathVariable Long registrationId, @RequestBody ConfirmationRequestDto confirmationRequestDto){
+    public ResponseEntity<String> patchById(@PathVariable Long eventId, @PathVariable String registrationId, @RequestBody ConfirmationRequestDto confirmationRequestDto){
         return registrationService.patchById(eventId, registrationId, confirmationRequestDto);
     }
 }

@@ -32,7 +32,7 @@ public class ScoringEngine {
         Integer otherSkillsPoints = calculateOtherSkillsPoints(registrationRequest.getExperience().getSkills());
         Integer repositoryPoints = registrationRequest.getExperience().getRepositoryUrl().isBlank() ? 0 : repositoryMultiplier;
         Integer languageAndSizeScore = 0, activityScore = 0 ;
-        if(registrationRequest.getExperience().getRepositoryUrl().substring(8,14)=="github") {
+        if(registrationRequest.getExperience().getRepositoryUrl().substring(8,14).equals("github")) {
              languageAndSizeScore = calculateRepoLanguageAndSizeScore(registrationRequest.getExperience().getRepositoryUrl());
              activityScore = calculateGithubActivityScore(registrationRequest.getExperience().getRepositoryUrl());
         }

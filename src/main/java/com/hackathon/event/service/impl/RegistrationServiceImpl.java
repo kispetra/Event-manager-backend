@@ -19,9 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,9 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final EventRepository eventRepository;
     private final RegistrationMapper registrationMapper;
-    private final SkillRepository skillRepository;
     private final CommentRepository commentRepository;
-    private final ParticipantRepository participantRepository;
 
 
     @Override
@@ -48,8 +45,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         Registration registration = registrationMapper.toEntity(registrationRequestDto, event);
-        URI locationUri= ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/event/{eventId}/registrations").buildAndExpand(event.getEventId()).toUri();
+
 
         Name name = registration.getPersonal().getName();
         name.setPersonal(registration.getPersonal());
@@ -65,15 +61,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         Experience experience = registration.getExperience();
         experience.setRegistration(registration);
-        registration.setExperience(experience);
-        registration.setScore(score);
-
-        registrationRepository.save(registration);
 
         for (Skill skill : registration.getExperience().getSkills()) {
             skill.setExperience(experience);
-            skillRepository.save(skill);
         }
+
+        registration.setExperience(experience);
+        registration.setScore(score);
+        registration.setRegistrationUUID(UUID.randomUUID());
+
+        registrationRepository.save(registration);
+        URI locationUri= ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/event/{eventId}/registrations").buildAndExpand(event.getEventId()).toUri();
 
         String emailSubject = "Registration filled";
         String emailText = "" +
@@ -89,11 +88,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public ResponseEntity<String> deleteById(Long eventId, Long registrationId) {
+    public ResponseEntity<String> deleteById(Long eventId, String registrationId) {
 
         Event event = eventRepository.findById(eventId).orElseThrow
                 (() -> new EntityNotFoundException("Event not found"));
-        Registration registration = registrationRepository.findById(registrationId).orElseThrow
+        Registration registration = registrationRepository.findById(UUID.fromString(registrationId)).orElseThrow
                 (() -> new EntityNotFoundException("Registration not found"));
 
         event.getRegistrations().remove(registration);
@@ -103,9 +102,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public ResponseEntity<String> score(Long eventId, Long registrationId, CommentRequestDto scoreRequestDto) {
+    public ResponseEntity<String> score(Long eventId, String registrationId, CommentRequestDto scoreRequestDto) {
         Event event = eventRepository.findById(eventId).orElseThrow(()-> new EntityNotFoundException("Event doesn't exist."));
-        Registration registration = registrationRepository.findById(registrationId).orElseThrow(() -> new EntityNotFoundException("Registration doesn't exist"));
+        Registration registration = registrationRepository.findById(UUID.fromString(registrationId)).orElseThrow(() -> new EntityNotFoundException("Registration doesn't exist"));
         if(scoreRequestDto.getScore().isEmpty() || scoreRequestDto.getComment().isEmpty()){
             return ResponseEntity.noContent().build();
         }
@@ -134,10 +133,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         return ResponseEntity.ok("Saved");
     }
     @Override
-    public RegistrationResponseDto fetchById(@PathVariable Long eventId, @PathVariable Long registrationId){
+    public RegistrationResponseDto fetchById(@PathVariable Long eventId, @PathVariable String registrationId){
         Event event = eventRepository.findById(eventId).orElseThrow
                      (() -> new EntityNotFoundException("Event not found"));
-        Registration registration = registrationRepository.findById(registrationId).orElseThrow
+        Registration registration = registrationRepository.findById(UUID.fromString(registrationId)).orElseThrow
                      (() -> new EntityNotFoundException("Registration not found"));
 
         RegistrationResponseDto registrationResponseDto= registrationMapper.toDto(registration);
@@ -150,10 +149,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         return registrationRepository.getAllRegistrationsByEventId(eventId, pageable).map(registrationMapper::toDto);
     }
     @Override
-    public ResponseEntity<String> patchById(Long eventId, Long registrationId, ConfirmationRequestDto confirmationRequestDto){
+    public ResponseEntity<String> patchById(Long eventId, String registrationId, ConfirmationRequestDto confirmationRequestDto){
         Event event = eventRepository.findById(eventId).orElseThrow
                 (() -> new EntityNotFoundException("Event not found"));
-        Registration registration = registrationRepository.findById(registrationId).orElseThrow
+        Registration registration = registrationRepository.findById(UUID.fromString(registrationId)).orElseThrow
                 (() -> new EntityNotFoundException("Registration not found"));
 
         if(confirmationRequestDto.getKickoff().equals(null)|| confirmationRequestDto.getParticipation().equals(null)
@@ -167,9 +166,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if( registration.getParticipation()!=null && registration.getParticipation()){
             return ResponseEntity.status(405).body("Already accepted.");
         }
-        if(participantRepository.existsById(registrationId)){
-            return ResponseEntity.status(405).body("Not invited.");
-        }
+
         registration.setParticipation(confirmationRequestDto.getParticipation());
         registration.setKickoff(confirmationRequestDto.getKickoff());
         registration.setTshirt(confirmationRequestDto.getTshirt());
