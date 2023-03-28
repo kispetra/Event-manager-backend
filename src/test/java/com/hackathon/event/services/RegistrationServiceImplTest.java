@@ -8,6 +8,7 @@ import com.hackathon.event.repository.EventRepository;
 import com.hackathon.event.repository.RegistrationRepository;
 import com.hackathon.event.service.impl.RegistrationServiceImpl;
 import com.hackathon.event.util.ScoringEngine;
+import org.apache.coyote.Response;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
@@ -19,12 +20,17 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RegistrationServiceImplTest {
@@ -51,9 +57,9 @@ public class RegistrationServiceImplTest {
 
     @Test
     @Ignore
-    void testSaveRegistration_returnsCreated() {
+    void testSaveRegistration_returnsCreated() throws URISyntaxException {
 
-        ScoringEngine scoringEngine = Mockito.mock(ScoringEngine.class);
+        ScoringEngine scoringEngine = mock(ScoringEngine.class);
 
         UUID testUUID = UUID.randomUUID();
         ResponseEntity<String> expectedResponseEntity = ResponseEntity.created(URI.create("/event/55/registrations/" + testUUID)).body("created");
@@ -97,6 +103,7 @@ public class RegistrationServiceImplTest {
         event.setRegistrationsNotAfter(new Date(2099, 5, 1));
         event.setMaxParticipants(5);
         event.setStartDate(new Date());
+        event.setWeeks(5);
 
         Registration registration = new Registration();
         registration.setRegistrationUUID(UUID.randomUUID());
@@ -126,14 +133,33 @@ public class RegistrationServiceImplTest {
         registration.setExperience(experience);
         registration.setRegistrationUUID(UUID.fromString(testUUID.toString()));
 
-        Mockito.when(scoringEngine.CalculateScore(Mockito.any(RegistrationRequestDto.class))).thenReturn(156);
-        Mockito.when(eventRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(event));
-        Mockito.when(registrationMapper.toEntity(Mockito.any(RegistrationRequestDto.class), Mockito.any(Event.class))).thenReturn(registration);
-        Mockito.when(registrationRepository.save(Mockito.any(Registration.class))).thenReturn(registration);
+        when(scoringEngine.CalculateScore(Mockito.any(RegistrationRequestDto.class))).thenReturn(156);
+        when(eventRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(event));
+        when(registrationMapper.toEntity(Mockito.any(RegistrationRequestDto.class), Mockito.any(Event.class))).thenReturn(registration);
+        when(registrationRepository.save(Mockito.any(Registration.class))).thenReturn(registration);
 
         ResponseEntity actualSavedRegistrationResponse = registrationService.save(55L, registrationRequestDto);
 
-        Assertions.assertEquals(expectedResponseEntity.getStatusCode(), actualSavedRegistrationResponse.getStatusCode());
+        assertEquals(expectedResponseEntity.getStatusCode(), actualSavedRegistrationResponse.getStatusCode());
     }
 
+    @Test
+    public void testDeleteById_returnsOk() {
+        Event event = new Event();
+        Registration registration = new Registration();
+        UUID registrationUUID = UUID.randomUUID();
+        registration.setRegistrationUUID(registrationUUID);
+        event.setRegistrations(new ArrayList<>());
+        event.getRegistrations().add(registration);
+
+        ResponseEntity<String> expectedResponse = ResponseEntity.ok("Deleted.");
+
+        Mockito.when(eventRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(event));
+        Mockito.when(registrationRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(registration));
+        Mockito.doNothing().when(registrationRepository).delete(registration);
+
+        ResponseEntity actualResponse = registrationService.deleteById(55L, registrationUUID.toString());
+
+        Assertions.assertEquals(expectedResponse, actualResponse);
+    }
 }
