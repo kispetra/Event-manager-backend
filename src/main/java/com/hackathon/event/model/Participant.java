@@ -28,11 +28,6 @@ public class Participant {
     @JsonIgnore
     private Registration registration;
 
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "team_id")
-    private Team team;
-
     @OneToMany(mappedBy = "participant")
     @JsonManagedReference
     private List<Progress> progress;

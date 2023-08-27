@@ -1,6 +1,5 @@
 package com.hackathon.event.dto;
 
-import com.hackathon.event.model.Mentor;
 import lombok.Getter;
 import lombok.Setter;
 

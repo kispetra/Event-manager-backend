@@ -16,7 +16,6 @@ public class RegistrationMapper {
     public Registration toEntity(RegistrationRequestDto requestDto, Event event){
         Registration registration = new Registration();
         registration.setEvent(event);
-        registration.setPreferredOs(requestDto.getPreferredOS());
         registration.setMotivation(requestDto.getMotivation());
 
 
@@ -64,7 +63,6 @@ public class RegistrationMapper {
     public RegistrationResponseDto toDto(Registration registration){
 
         RegistrationResponseDto registrationResponseDto= new RegistrationResponseDto();
-        registrationResponseDto.setPreferredOS(registration.getPreferredOs());
         registrationResponseDto.setMotivation(registration.getMotivation());
         registrationResponseDto.setScore(registration.getScore());
         List<CommentResponseDto> comments= new ArrayList<>();

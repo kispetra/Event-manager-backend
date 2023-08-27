@@ -7,9 +7,5 @@ import lombok.Setter;
 @Setter
 public class ConfirmationRequestDto {
     private Boolean participation;
-    private Boolean kickoff;
-    private String tshirt;
-    private String gitlab;
-
 }
 

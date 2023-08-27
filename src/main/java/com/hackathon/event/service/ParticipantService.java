@@ -13,6 +13,5 @@ public interface ParticipantService {
 
     Page<ParticipantResponseDto> getAllParticipants(Long eventId, Pageable pageable);
 
-    AllTeamsResponseDto getTeams(Long eventId);
 }
 

@@ -95,9 +95,7 @@ public class RegistrationServiceImplTest {
         event.setEventId(55L);
         event.setInvitesSent(false);
         event.setRegistrations(new ArrayList<>());
-        event.setDivided(false);
         event.setName("TEST EVENT");
-        event.setTeams(new ArrayList<>());
         event.setConfirmationNotAfter(new Date());
         event.setRegistrationsNotBefore(new Date());
         event.setRegistrationsNotAfter(new Date(2099, 5, 1));

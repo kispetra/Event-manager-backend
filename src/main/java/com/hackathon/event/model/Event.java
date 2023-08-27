@@ -20,9 +20,8 @@ public class Event {
     private Long eventId;
     @Column
     private String name;
-    @OneToMany(mappedBy = "event")
-    @JsonManagedReference
-    private List<Team> teams;
+    @Column
+    private String description;
     @Column(name = "maxparticipants")
     private Integer maxParticipants;
     @Column(name = "registrationsnotbefore")
@@ -37,8 +36,6 @@ public class Event {
     private int weeks;
     @Column(name = "sent_invites")
     private Boolean invitesSent;
-    @Column
-    private Boolean divided;
     @Column
     @JsonManagedReference
     @OneToMany(mappedBy = "event")

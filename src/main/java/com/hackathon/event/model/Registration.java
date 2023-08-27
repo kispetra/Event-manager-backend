@@ -28,7 +28,6 @@ public class Registration {
     @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Experience experience;
 
-
     @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Participant participant;
 
@@ -41,14 +40,8 @@ public class Registration {
     @Column
     private String motivation;
 
-    @Column(name="preferredos")
-    private String preferredOs;
     @Column
     private Boolean participation;
-    @Column
-    private Boolean kickoff;
-    @Column
-    private String tshirt;
-    @Column
-    private String gitlab;
+
+
 }

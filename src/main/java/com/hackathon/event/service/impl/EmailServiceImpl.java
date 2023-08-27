@@ -3,7 +3,6 @@ package com.hackathon.event.service.impl;
 import com.hackathon.event.model.Event;
 import com.hackathon.event.model.Participant;
 import com.hackathon.event.model.Registration;
-import com.hackathon.event.model.Team;
 import com.hackathon.event.repository.EventRepository;
 import com.hackathon.event.repository.ParticipantRepository;
 import com.hackathon.event.service.EmailService;

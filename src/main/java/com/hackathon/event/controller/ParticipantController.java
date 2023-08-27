@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequiredArgsConstructor
 public class ParticipantController {
@@ -26,9 +27,5 @@ public class ParticipantController {
     @GetMapping("/event/{eventId}/participants")
     public Page<ParticipantResponseDto> getAllParticipants(@PathVariable Long eventId, Pageable pageable){
         return participantService.getAllParticipants(eventId,pageable);
-    }
-    @GetMapping("/event/{eventId}/teams")
-    public AllTeamsResponseDto getTeams(@PathVariable Long eventId){
-        return participantService.getTeams(eventId);
     }
 }

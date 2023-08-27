@@ -155,8 +155,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Registration registration = registrationRepository.findById(UUID.fromString(registrationId)).orElseThrow
                 (() -> new EntityNotFoundException("Registration not found"));
 
-        if(confirmationRequestDto.getKickoff().equals(null)|| confirmationRequestDto.getParticipation().equals(null)
-            || confirmationRequestDto.getTshirt().isEmpty() || confirmationRequestDto.getGitlab().isEmpty()){
+        if( confirmationRequestDto.getParticipation().equals(null)){
             return ResponseEntity.noContent().build();
         }
         Date date= new Date();
@@ -168,10 +167,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         registration.setParticipation(confirmationRequestDto.getParticipation());
-        registration.setKickoff(confirmationRequestDto.getKickoff());
-        registration.setTshirt(confirmationRequestDto.getTshirt());
-        registration.setGitlab(confirmationRequestDto.getGitlab());
-
         registrationRepository.save(registration);
 
         String emailSubject = "Participation confirmed";

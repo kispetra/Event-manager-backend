@@ -53,9 +53,6 @@ public class ParticipantMapper {
         }
         participantResponseDto.setComments(comments);
         participantResponseDto.setParticipation(participant.getRegistration().getParticipation());
-        participantResponseDto.setKickoff(participant.getRegistration().getKickoff());
-        participantResponseDto.setTshirt(participant.getRegistration().getTshirt());
-        participantResponseDto.setGitlab(participant.getRegistration().getGitlab());
 
 
         List<ProgressResponseDto> progresses= new ArrayList<>();
