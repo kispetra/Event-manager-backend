@@ -3,11 +3,8 @@ package com.hackathon.event.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-@Getter
-@Setter
-public class TeamRequestDto {
+@Getter @Setter
+public class SkillResponseDto {
     private String name;
-    private List<String> mentors;
+    private Integer points;
 }

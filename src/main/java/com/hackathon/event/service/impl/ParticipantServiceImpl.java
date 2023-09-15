@@ -28,12 +28,15 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Override
     public ResponseEntity<String> saveProgress(Long eventId, Long participantId,
                                        Integer week_no, FlowRequestDto flowRequestDto){
+        if (flowRequestDto == null || flowRequestDto.getComment() == null) {
+            return ResponseEntity.badRequest().body("FlowRequestDto and comment must not be null.");
+        }
         Event event = eventRepository.findById(eventId).orElseThrow
                 (() -> new EntityNotFoundException("Event not found"));
         Participant participant = participantRepository.findById(participantId).orElseThrow
                 (() -> new EntityNotFoundException("Registration not found"));
 
-        if(flowRequestDto.getComment().isEmpty() || flowRequestDto.getStatus().isEmpty()){
+        if(flowRequestDto.getComment().isEmpty()){
             return ResponseEntity.noContent().build();
         }
         if(week_no>event.getWeeks()){
@@ -43,7 +46,6 @@ public class ParticipantServiceImpl implements ParticipantService {
         List<Progress> progresses = participant.getProgress();
 
         Flow flow = new Flow();
-        flow.setStatus(StatusType.valueOf(flowRequestDto.getStatus()));
         flow.setComment(flowRequestDto.getComment());
 
         Progress progress = new Progress();
@@ -73,5 +75,7 @@ public class ParticipantServiceImpl implements ParticipantService {
         Page<Participant> allParticipantsByEventId = participantRepository.getAllParticipantsByEventId(eventId, pageable);
         return participantRepository.getAllParticipantsByEventId(eventId, pageable).map(participantMapper::toDto);
     }
-
+    public List<Progress> getProgress( Long eventId,  Long participantId) {
+        return participantRepository.findAllProgressByParticipantId(participantId);
+    }
 }

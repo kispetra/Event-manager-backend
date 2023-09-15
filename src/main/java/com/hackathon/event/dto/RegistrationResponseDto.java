@@ -8,10 +8,10 @@ import java.util.List;
 @Getter
 @Setter
 public class RegistrationResponseDto {
+     Long registrationId;
     PersonalResponseDto personal;
     ExperienceResponseDto experience;
     private String motivation;
-    private String preferredOS;
     private Integer score;
     List<CommentResponseDto> comments;
 }

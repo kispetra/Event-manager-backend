@@ -1,6 +1,6 @@
-package com.hackathon.event.auth;
+package com.hackathon.event.repository;
 
-
+import com.hackathon.event.model.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
@@ -9,9 +9,8 @@ import java.util.Optional;
 
 @EnableJpaRepositories
 @Repository
-public interface UserRepo extends JpaRepository<appUser,Long>
+public interface UserRepo extends JpaRepository<AppUser,Long>
 {
-    Optional<appUser> findOneByEmailAndPassword(String email, String password);
+    Optional<AppUser> findByLogin(String login);
 
-    appUser findByEmail(String email);
 }

@@ -2,7 +2,6 @@ package com.hackathon.event.mapper;
 
 import com.hackathon.event.dto.*;
 import com.hackathon.event.model.*;
-import com.hackathon.event.model.enumeration.SkillType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RegistrationMapper {
     private final CommentMapper commentMapper;
+    private final SkillMapper skillMapper;
     public Registration toEntity(RegistrationRequestDto requestDto, Event event){
         Registration registration = new Registration();
         registration.setEvent(event);
@@ -21,20 +21,14 @@ public class RegistrationMapper {
 
         Experience experience = new Experience();
         experience.setYears(requestDto.getExperience().getYears());
-        experience.setRepositoryUrl(requestDto.getExperience().getRepositoryUrl());
         experience.setSummary(requestDto.getExperience().getSummary());
 
         List<Skill> skills = new ArrayList<>();
-        for(String skill : requestDto.getExperience().getSkills()){
-            if(skillTypeExists(skill)){
-                Skill skillToSave = new Skill();
-                skillToSave.setSkillType(SkillType.valueOf(skill));
-                skills.add(skillToSave);
-            }
-        }
-
-        for (Skill skill : skills){
+        for( SkillNameRequestDto skillDto : requestDto.getExperience().getSkills()){
+            Skill skill= skillMapper.toEntityName(skillDto);
+            skill.setEvent(event);
             skill.setExperience(experience);
+            skills.add(skill);
         }
 
         experience.setSkills(skills);
@@ -63,6 +57,7 @@ public class RegistrationMapper {
     public RegistrationResponseDto toDto(Registration registration){
 
         RegistrationResponseDto registrationResponseDto= new RegistrationResponseDto();
+        registrationResponseDto.setRegistrationId(registration.getRegistrationId());
         registrationResponseDto.setMotivation(registration.getMotivation());
         registrationResponseDto.setScore(registration.getScore());
         List<CommentResponseDto> comments= new ArrayList<>();
@@ -93,15 +88,11 @@ public class RegistrationMapper {
 
         ExperienceResponseDto experienceResponseDto= new ExperienceResponseDto();
         experienceResponseDto.setYears(registration.getExperience().getYears());
-        List<String> skills = new ArrayList<>();
+        List<SkillResponseDto> skills = new ArrayList<>();
         for(Skill skill : registration.getExperience().getSkills()){
-                String skillToSave = skill.getSkillType().name();
-                //skillToSave.setSkillId(skill.getSkillId());
-                //skillToSave.setSkillType(skill.getSkillType());
-                skills.add(skillToSave);
+                skills.add(skillMapper.toDto(skill));
         }
         experienceResponseDto.setSkills(skills);
-        experienceResponseDto.setRepositoryUrl(registration.getExperience().getRepositoryUrl());
         experienceResponseDto.setSummary(registration.getExperience().getSummary());
         registrationResponseDto.setExperience(experienceResponseDto);
 
@@ -109,13 +100,4 @@ public class RegistrationMapper {
 
     }
 
-    // TODO: move this to validation
-    private boolean skillTypeExists(String skillType){
-        for (SkillType skill : SkillType.values()) {
-            if (skill.name().equals(skillType)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

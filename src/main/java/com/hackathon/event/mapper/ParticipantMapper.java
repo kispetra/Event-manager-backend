@@ -16,10 +16,12 @@ import java.util.List;
 public class ParticipantMapper {
     private final CommentMapper commentMapper;
     private final ProgressMapper progressMapper;
+    private final SkillMapper skillMapper;
     public ParticipantResponseDto toDto(Participant participant){
         ParticipantResponseDto participantResponseDto= new ParticipantResponseDto();
-
+        participantResponseDto.setParticipantId(participant.getParticipantId());
         PersonalResponseDto personalResponseDto=new PersonalResponseDto();
+
         NameResponseDto nameResponseDto= new NameResponseDto();
         nameResponseDto.setFirst(participant.getRegistration().getPersonal().getName().getFirstName());
         nameResponseDto.setLast(participant.getRegistration().getPersonal().getName().getLastName());
@@ -35,13 +37,12 @@ public class ParticipantMapper {
 
         ExperienceResponseDto experienceResponseDto= new ExperienceResponseDto();
         experienceResponseDto.setYears(participant.getRegistration().getExperience().getYears());
-        List<String> skills = new ArrayList<>();
+        List<SkillResponseDto> skills = new ArrayList<>();
         for(Skill skill : participant.getRegistration().getExperience().getSkills()){
-            String skillToSave = skill.getSkillType().name();
+            SkillResponseDto skillToSave = skillMapper.toDto(skill);
             skills.add(skillToSave);
         }
         experienceResponseDto.setSkills(skills);
-        experienceResponseDto.setRepositoryUrl(participant.getRegistration().getExperience().getRepositoryUrl());
         experienceResponseDto.setSummary(participant.getRegistration().getExperience().getSummary());
         participantResponseDto.setExperience(experienceResponseDto);
         participantResponseDto.setScore(participant.getRegistration().getScore());

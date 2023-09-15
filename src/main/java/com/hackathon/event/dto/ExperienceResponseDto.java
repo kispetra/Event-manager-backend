@@ -10,7 +10,6 @@ import java.util.List;
 @Setter
 public class ExperienceResponseDto {
     private Integer years;
-    private List<String> skills;
-    private String repositoryUrl;
+    private List<SkillResponseDto> skills;
     private String summary;
 }
