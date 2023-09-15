@@ -22,7 +22,5 @@ public class Flow {
     @JoinColumn(name = "progress_id")
     private Progress progress;
     @Column
-    private StatusType status;
-    @Column
     private String comment;
 }

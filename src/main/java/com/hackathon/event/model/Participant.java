@@ -19,7 +19,10 @@ public class Participant {
     @SequenceGenerator(name="participant_sequence", allocationSize = 1)
     @Column(name = "participant_id")
     private Long participantId;
-
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name="user_id")
+    private AppUser appUser;
     @Column
     private String email;
 
@@ -27,11 +30,10 @@ public class Participant {
     @JoinColumn(name="registration_id")
     @JsonIgnore
     private Registration registration;
-
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="event_id")
+    @JsonIgnore
+    private Event event;
 
     @OneToMany(mappedBy = "participant")
     @JsonManagedReference

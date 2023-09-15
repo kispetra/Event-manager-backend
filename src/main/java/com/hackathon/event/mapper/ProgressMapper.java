@@ -21,7 +21,6 @@ public class ProgressMapper {
         progressResponseDto.setWeek_no(progress.getWeek());
         List<FlowResponseDto> flowList= new ArrayList<>();
         for(Flow flow: progress.getFlow()){
-            flowResponseDto.setStatus(flow.getStatus());
             flowResponseDto.setComment(flow.getComment());
             flowList.add(flowResponseDto);
         }

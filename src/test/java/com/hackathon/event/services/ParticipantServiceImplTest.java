@@ -46,8 +46,6 @@ public class ParticipantServiceImplTest {
     private FlowRepository flowRepository;
     @Mock
     private ParticipantMapper participantMapper;
-    @Mock
-    private TeamRepository teamRepository;
 
     @InjectMocks
     private ParticipantServiceImpl participantService;

@@ -1,8 +1,6 @@
 package com.hackathon.event.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hackathon.event.model.enumeration.SkillType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,13 +16,17 @@ public class Skill {
     @SequenceGenerator(name="skill_sequence", allocationSize = 1)
     @Column(name = "skill_id")
     private Long skillId;
-
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name="event_id")
+    private Event event;
     @ManyToOne
     @JoinColumn(name="experience_id")
     @JsonBackReference
     private Experience experience;
 
-    @Column(name = "skill_type")
-    @Enumerated
-    private SkillType skillType;
+    @Column(name = "name")
+    private String name;
+    @Column(name="points")
+    private Integer points;
 }

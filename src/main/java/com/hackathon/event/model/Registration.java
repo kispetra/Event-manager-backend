@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name="registrations")
@@ -14,20 +13,25 @@ import java.util.UUID;
 @Setter
 public class Registration {
     @Id
-    @Column(name = "registration_uuid")
-    private UUID registrationUUID;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "registration_sequence")
+    @SequenceGenerator(name = "registration_sequence", allocationSize = 1)
+    @Column(name = "registration_id")
+    private Long registrationId;
 
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name="event_id")
     private Event event;
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name="user_id")
+    private AppUser appUser;
 
     @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Personal personal;
 
     @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Experience experience;
-
 
     @OneToOne(mappedBy = "registration", cascade = CascadeType.ALL)
     private Participant participant;
@@ -41,14 +45,8 @@ public class Registration {
     @Column
     private String motivation;
 
-    @Column(name="preferredos")
-    private String preferredOs;
     @Column
     private Boolean participation;
-    @Column
-    private Boolean kickoff;
-    @Column
-    private String tshirt;
-    @Column
-    private String gitlab;
+
+
 }

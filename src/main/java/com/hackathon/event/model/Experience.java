@@ -27,7 +27,7 @@ public class Experience {
     @Column(name = "years")
     private Integer years;
 
-    @OneToMany(mappedBy = "experience", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "experience", cascade = CascadeType.PERSIST)
     @JsonManagedReference
     private List<Skill> skills;
 
